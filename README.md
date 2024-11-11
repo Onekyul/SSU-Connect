@@ -11,6 +11,7 @@
 
 # 2024-11-11 
 
+## DB
 인스턴스 연결에 성공하였으나
 지속적으로 메모리 할당 오류 발생
 (bad_alloc)
@@ -30,3 +31,17 @@ mysql 8.x버전과 호환이 안되는 것을 파악. 8.x버전으로 다시 설
 8.x 버전을 사용하여 문제 해결. 
 
 데이터베이스와 연결 성공. 
+
+## UI
+윈도우 크기 고정 및 버튼 배치 과정 수행.
+상단 내비게이션 바와 하단 버튼 구역 나누는 과정 수행.
+
+UI에서 버튼을 누르면 메인 뷰의 화면을 바꾸도록 OnPaint()함수 수정 및 RemoveView()라는 함수를 만듬으로써 구현
+RemoveView()를 하면 뷰의 상태를 바꾸고, 모든 상태에서도 존재하는 Logout버튼은 위치만 이동시키고 다른 버튼은 지우도록 하는 식으로 구현
+
+특이사항 : 
+초기시작 했을 때 윈도우가 두개가 뜨는 오류가 있었음
+-> .cpp 파일에 initinstance()함수에서 CSingleDocTemplate가 문서-뷰 구조를 강제로 생성하기 때문이었음
+이를 위해 CSingleDocTemplate 관련 부분을 제거하고 CMainFrame만 생성하도록 InitInstance 함수를 수정했음.
+문서-뷰 구조 제거: CSingleDocTemplate와 AddDocTemplate(pDocTemplate); 관련 코드 삭제.
+프레임 창만 생성: CMainFrame을 생성하여 m_pMainWnd에 할당하고 이를 메인 창으로 설정.
