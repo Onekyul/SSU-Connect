@@ -183,7 +183,6 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="CLogInDlg.h" />
     <ClInclude Include="CRegisterDlg.h" />
     <ClInclude Include="framework.h" />
@@ -196,7 +195,6 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="CLogInDlg.cpp" />
     <ClCompile Include="CRegisterDlg.cpp" />
     <ClCompile Include="MainFrm.cpp" />

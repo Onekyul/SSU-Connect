@@ -66,17 +66,6 @@ BOOL CMFCApplication4App::InitInstance()
     SetRegistryKey(_T("로컬 애플리케이션 마법사에서 생성된 애플리케이션"));
     LoadStdProfileSettings(4);
 
-    // 애플리케이션의 문서 템플릿을 등록합니다. 
-    CSingleDocTemplate* pDocTemplate;
-    pDocTemplate = new CSingleDocTemplate(
-        IDR_MAINFRAME,
-        RUNTIME_CLASS(CMFCApplication4Doc),
-        RUNTIME_CLASS(CMainFrame),
-        RUNTIME_CLASS(CMFCApplication4View));
-    if (!pDocTemplate)
-        return FALSE;
-    AddDocTemplate(pDocTemplate);
-
     // 주 프레임 창을 만듭니다.
     CMainFrame* pMainFrame = new CMainFrame();
     if (!pMainFrame || !pMainFrame->LoadFrame(IDR_MAINFRAME))
@@ -85,14 +74,6 @@ BOOL CMFCApplication4App::InitInstance()
         return FALSE;
     }
     m_pMainWnd = pMainFrame;
-
-    // 명령줄을 구문 분석합니다.
-    CCommandLineInfo cmdInfo;
-    ParseCommandLine(cmdInfo);
-
-    // 명령줄에 지정된 명령을 처리합니다.
-    if (!ProcessShellCommand(cmdInfo))
-        return FALSE;
 
     // 주 창을 초기화하고 표시합니다.
     pMainFrame->ShowWindow(m_nCmdShow);

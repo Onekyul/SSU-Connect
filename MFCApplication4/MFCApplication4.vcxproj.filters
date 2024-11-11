@@ -27,9 +27,6 @@
     <ClInclude Include="MainFrm.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="ChildFrm.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="MFCApplication4Doc.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -54,9 +51,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="MainFrm.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="ChildFrm.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="MFCApplication4Doc.cpp">
