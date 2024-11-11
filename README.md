@@ -9,7 +9,7 @@
 3주차
 -수정 및 보완
 
-# 2024-11-11 
+# 2024-11-10 
 
 ## DB
 인스턴스 연결에 성공하였으나
@@ -45,3 +45,8 @@ RemoveView()를 하면 뷰의 상태를 바꾸고, 모든 상태에서도 존재
 이를 위해 CSingleDocTemplate 관련 부분을 제거하고 CMainFrame만 생성하도록 InitInstance 함수를 수정했음.
 문서-뷰 구조 제거: CSingleDocTemplate와 AddDocTemplate(pDocTemplate); 관련 코드 삭제.
 프레임 창만 생성: CMainFrame을 생성하여 m_pMainWnd에 할당하고 이를 메인 창으로 설정.
+
+# 2024-11-11 
+
+## DB
+데이터베이스 접속불가
