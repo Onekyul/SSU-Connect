@@ -13,7 +13,7 @@
 
 // CMainFrame
 
-IMPLEMENT_DYNAMIC(CMainFrame, CFrameWnd)
+IMPLEMENT_DYNCREATE(CMainFrame, CFrameWnd)
 
 BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
     ON_WM_CREATE()
@@ -23,6 +23,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
     ON_BN_CLICKED(IDC_BUTTON_SETTINGS, &CMainFrame::OnSettingsClicked)
     ON_WM_PAINT()
     ON_WM_SHOWWINDOW()
+    ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -58,28 +59,31 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
     }
 
     // 로그아웃 버튼 생성
-    if (!m_logoutButton.Create(_T("로그아웃"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(250, 10, 320, 30), this, IDC_BUTTON_LOGOUT))
+    if (!m_logoutButton.Create(_T("로그아웃"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(280, 10, 370, 30), this, IDC_BUTTON_LOGOUT))
     {
         TRACE0("로그아웃 버튼을 생성하지 못했습니다.\n");
+        m_logoutButton.MoveWindow(280, 5, 100, 20);
         return -1;
     }
 
     // 하단 네비게이션 버튼들 생성
-    if (!m_friendsButton.Create(_T("친구"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(10, 400, 80, 440), this, IDC_BUTTON_FRIENDS))
+    if (!m_friendsButton.Create(_T("친구"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(0, 500, 125, 550), this, IDC_BUTTON_FRIENDS))
     {
         TRACE0("친구 버튼을 생성하지 못했습니다.\n");
         return -1;
     }
-    if (!m_chatRoomsButton.Create(_T("채팅방"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(100, 400, 180, 440), this, IDC_BUTTON_CHATROOMS))
+    if (!m_chatRoomsButton.Create(_T("채팅방"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(125, 500, 255, 550), this, IDC_BUTTON_CHATROOMS))
     {
         TRACE0("채팅방 버튼을 생성하지 못했습니다.\n");
         return -1;
     }
-    if (!m_settingsButton.Create(_T("설정"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(200, 400, 280, 440), this, IDC_BUTTON_SETTINGS))
+    if (!m_settingsButton.Create(_T("설정"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(255, 500, 380, 550), this, IDC_BUTTON_SETTINGS))
     {
         TRACE0("설정 버튼을 생성하지 못했습니다.\n");
         return -1;
     }
+
+    SetWindowPos(NULL, 100, 100, 400, 600, SWP_NOZORDER | SWP_NOACTIVATE);
 
     return 0;
 }
@@ -101,29 +105,37 @@ void CMainFrame::OnLogoutClicked()
 
 void CMainFrame::OnFriendsClicked()
 {
+    m_currentScreen = SCREEN_FRIENDS;
     RemoveViews();
-    m_currentScreen = SCREEN_FRIENDS;  // 친구 목록 화면으로 설정
     Invalidate();  // 화면 갱신
 }
 
 void CMainFrame::OnChatRoomsClicked()
 {
-    RemoveViews();
     m_currentScreen = SCREEN_CHATROOMS;  // 채팅방 화면으로 설정
+    RemoveViews();
     Invalidate();  // 화면 갱신
 }
 
 void CMainFrame::OnSettingsClicked()
 {
+    m_currentScreen = SCREEN_SETTINGS;
     RemoveViews();
-    m_currentScreen = SCREEN_SETTINGS;  // 설정 화면으로 설정
-    Invalidate();  // 화면 갱신
+    Invalidate();
+
 }
 
 // OnPaint 함수에서 화면 상태에 맞는 내용을 그립니다.
 void CMainFrame::OnPaint()
 {
+
     CPaintDC dc(this); // 그리기 장치를 위한 DC
+
+    dc.MoveTo(0, 30);
+    dc.LineTo(400, 30);
+
+    dc.MoveTo(0, 500);
+    dc.LineTo(400, 500);
 
     switch (m_currentScreen)
     {
@@ -136,11 +148,26 @@ void CMainFrame::OnPaint()
         break;
 
     case SCREEN_SETTINGS:
+        dc.TextOutW(180, 50, _T("프로필 사진"));
+        dc.TextOutW(160, 100, _T("닉네임: 사용자 이름"));
         dc.TextOutW(100, 100, _T("설정 화면"));
+
+        // 회원정보 변경 버튼 생성
         if (!m_editProfileButton.GetSafeHwnd())
         {
-            m_editProfileButton.Create(_T("프로필 설정"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(100, 150, 200, 180), this, 1001);
-            m_deleteAccountButton.Create(_T("회원 탈퇴"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(100, 200, 200, 230), this, 1002);
+            m_editProfileButton.Create(_T("회원정보 변경"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(140, 150, 260, 180), this, 1001);
+        }
+
+        // 로그아웃 버튼 생성
+        if (m_logoutButton.GetSafeHwnd())
+        {
+            m_logoutButton.MoveWindow(140, 200, 120, 30);
+        }
+
+        // 회원탈퇴 버튼 생성
+        if (!m_deleteAccountButton.GetSafeHwnd())
+        {
+            m_deleteAccountButton.Create(_T("회원탈퇴"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(140, 250, 260, 280), this, 1002);
         }
         break;
 
@@ -155,6 +182,9 @@ void CMainFrame::OnPaint()
 
 void CMainFrame::RemoveViews()
 {
+    if (m_currentScreen != SCREEN_SETTINGS) {
+        m_logoutButton.MoveWindow(280, 5, 100, 20);
+    }
     // TODO: 여기에 구현 코드 추가.
     if (m_editProfileButton.GetSafeHwnd())
     {
@@ -185,6 +215,17 @@ void CMainFrame::OnShowWindow(BOOL bShow, UINT nStatus)
                 //DB확인 if문
 
             }
-        }
+        }   
     }
+}   
+
+
+void CMainFrame::OnSize(UINT nType, int cx, int cy)
+{
+    CFrameWnd::OnSize(nType, cx, cy);
+    if (cx != 400 || cy != 600)  // 설정한 고정 크기
+    {
+        SetWindowPos(NULL, 0, 0, 400, 600, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
+    }
+    // TODO: 여기에 메시지 처리기 코드를 추가합니다.
 }
