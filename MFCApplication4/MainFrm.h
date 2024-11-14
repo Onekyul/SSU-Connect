@@ -42,6 +42,7 @@ protected:
     afx_msg void OnSettingsClicked();
     afx_msg void OnEditProfileClicked();
     afx_msg void OnDeleteAccountClicked();
+    
 
     // 설정 화면을 그리는 함수
     void ShowSettingsScreen(CDC* pDC);

@@ -39,7 +39,8 @@ END_MESSAGE_MAP()
 
 
 void CLogInDlg::OnClickedButtonLogin()
-{
+{	//DB와 확인 후 맞으면 OK 아니면 아닙니다 모달 출력
+	EndDialog(IDOK);
 	
 }
 
@@ -48,7 +49,7 @@ void CLogInDlg::OnClickedButtonRegister()
 {
 	CRegisterDlg Register;
 	if (Register.DoModal() == IDOK) {
-		//DB에 테이블 추가 및 ----
+		//DB에 테이블 추가 및 ---- , 중복처리?
 	}
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }

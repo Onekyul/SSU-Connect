@@ -6,6 +6,7 @@
 #include "Resource.h"
 #include "MainFrm.h"
 #include "CLogInDlg.h"
+#include "CCheckDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -21,6 +22,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
     ON_BN_CLICKED(IDC_BUTTON_FRIENDS, &CMainFrame::OnFriendsClicked)
     ON_BN_CLICKED(IDC_BUTTON_CHATROOMS, &CMainFrame::OnChatRoomsClicked)
     ON_BN_CLICKED(IDC_BUTTON_SETTINGS, &CMainFrame::OnSettingsClicked)
+    ON_BN_CLICKED(IDC_BUTTON_EDIT, &CMainFrame::OnEditProfileClicked)
+    ON_BN_CLICKED(IDC_BUTTON_WITHDRAW,&CMainFrame::OnDeleteAccountClicked)
     ON_WM_PAINT()
     ON_WM_SHOWWINDOW()
     ON_WM_SIZE()
@@ -101,6 +104,7 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 void CMainFrame::OnLogoutClicked()
 {
     AfxMessageBox(_T("로그아웃 되었습니다."));
+    DestroyWindow();
 }
 
 void CMainFrame::OnFriendsClicked()
@@ -122,6 +126,23 @@ void CMainFrame::OnSettingsClicked()
     m_currentScreen = SCREEN_SETTINGS;
     RemoveViews();
     Invalidate();
+
+}
+void CMainFrame::OnEditProfileClicked() {
+    CCheckDlg CheckPW;
+
+    if (CheckPW.DoModal() == IDOK) {
+
+    }
+    
+}
+
+void CMainFrame::OnDeleteAccountClicked() {
+    CCheckDlg CheckPW;
+
+    if (CheckPW.DoModal() == IDOK) {
+
+    }
 
 }
 
@@ -155,7 +176,7 @@ void CMainFrame::OnPaint()
         // 회원정보 변경 버튼 생성
         if (!m_editProfileButton.GetSafeHwnd())
         {
-            m_editProfileButton.Create(_T("회원정보 변경"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(140, 150, 260, 180), this, 1001);
+            m_editProfileButton.Create(_T("회원정보 변경"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(140, 150, 260, 180), this, IDC_BUTTON_EDIT);
         }
 
         // 로그아웃 버튼 생성
@@ -167,7 +188,7 @@ void CMainFrame::OnPaint()
         // 회원탈퇴 버튼 생성
         if (!m_deleteAccountButton.GetSafeHwnd())
         {
-            m_deleteAccountButton.Create(_T("회원탈퇴"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(140, 250, 260, 280), this, 1002);
+            m_deleteAccountButton.Create(_T("회원탈퇴"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(140, 250, 260, 280), this, IDC_BUTTON_WITHDRAW);
         }
         break;
 
