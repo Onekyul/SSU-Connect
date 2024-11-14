@@ -169,26 +169,26 @@ void CMainFrame::OnPaint()
         break;
 
     case SCREEN_SETTINGS:
-        dc.TextOutW(180, 50, _T("프로필 사진"));
-        dc.TextOutW(160, 100, _T("닉네임: 사용자 이름"));
-        dc.TextOutW(100, 100, _T("설정 화면"));
+        dc.TextOutW(120, 150, _T("프로필 사진"));
+        dc.TextOutW(120, 300, _T("사용자 이름"));
+        
 
         // 회원정보 변경 버튼 생성
         if (!m_editProfileButton.GetSafeHwnd())
         {
-            m_editProfileButton.Create(_T("회원정보 변경"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(140, 150, 260, 180), this, IDC_BUTTON_EDIT);
+            m_editProfileButton.Create(_T("회원정보 변경"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(120, 350, 240, 380), this, IDC_BUTTON_EDIT);
         }
 
         // 로그아웃 버튼 생성
         if (m_logoutButton.GetSafeHwnd())
         {
-            m_logoutButton.MoveWindow(140, 200, 120, 30);
+            m_logoutButton.MoveWindow(120, 385, 120, 30);
         }
 
         // 회원탈퇴 버튼 생성
         if (!m_deleteAccountButton.GetSafeHwnd())
         {
-            m_deleteAccountButton.Create(_T("회원탈퇴"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(140, 250, 260, 280), this, IDC_BUTTON_WITHDRAW);
+            m_deleteAccountButton.Create(_T("회원탈퇴"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(120, 420, 240, 450), this, IDC_BUTTON_WITHDRAW);
         }
         break;
 
