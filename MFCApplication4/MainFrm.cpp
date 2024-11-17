@@ -223,6 +223,30 @@ void CMainFrame::OnShowWindow(BOOL bShow, UINT nStatus)
     CFrameWnd::OnShowWindow(bShow, nStatus);
 
     // TODO: 여기에 메시지 처리기 코드를 추가합니다.
+
+    MYSQL Conn;
+    MYSQL* ConnPtr = NULL;
+    MYSQL_RES* Result;
+    MYSQL_ROW Row;
+    int Stat;
+
+    mysql_init(&Conn);
+    ConnPtr = mysql_real_connect(&Conn, MY_IP, DB_USER, DB_PASS, DB_NAME, 3306, (char*)NULL, 0);
+
+    mysql_query(ConnPtr, "set session character_set_connection=euckr;");
+    mysql_query(ConnPtr, "set session character_set_results=euckr;");
+    mysql_query(ConnPtr, "set session character_set_client=euckr;");
+
+    if (ConnPtr == NULL)
+    {
+        MessageBox(NULL, _T("DB 접속에 실패했습니다.\n응용 프로그램을 시작할 수 없습니다."), MB_OK);
+    }
+    else
+    {
+        MessageBox(NULL, _T("DB 접속에 성공"));
+
+    }
+
     if (bShow)  // 창이 처음 보일 때만 실행
     {
         static bool isDialogShown = false;

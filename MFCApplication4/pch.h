@@ -9,5 +9,23 @@
 
 // 여기에 미리 컴파일하려는 헤더 추가
 #include "framework.h"
+//MYSQL 관련헤더 ----------------------------------------------------------
+#include <mysql.h>
+#include <afxsock.h>
+#include <WinSock2.h>
+#pragma comment(lib,"libmysql.lib")
+#pragma comment(lib,"ws2_32.lib")
+//----------------------------------------------------------------------------
+
+//DB연결 초기화 관련헤더 ----------------------------------------------------
+#define MY_IP "localhost"
+#define DB_USER "root"
+#define DB_PASS "thdtjdghks@"
+#define DB_NAME "Mydatabase"
+//-----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+#pragma comment( lib, "libmysql.lib" )
 
 #endif //PCH_H

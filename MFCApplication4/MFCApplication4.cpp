@@ -106,6 +106,8 @@ protected:
 
 protected:
     DECLARE_MESSAGE_MAP()
+public:
+//    virtual BOOL OnInitDialog();
 };
 
 CAboutDlg::CAboutDlg() noexcept : CDialogEx(IDD_ABOUTBOX)
