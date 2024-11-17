@@ -37,13 +37,78 @@ END_MESSAGE_MAP()
 
 // CLogInDlg 메시지 처리기
 
-
 void CLogInDlg::OnClickedButtonLogin()
-{	//DB와 확인 후 맞으면 OK 아니면 아닙니다 모달 출력
-	EndDialog(IDOK);
-	
-}
+{
+    // DB와 확인 후 맞으면 OK 아니면 아닙니다 모달 출력
+    MYSQL Conn;
+    MYSQL* ConnPtr = NULL;
+    MYSQL_RES* Result;
+    MYSQL_ROW Row;
+    CString m_strId;
+    CString m_strPw;
+    GetDlgItemText(IDC_EDIT_ID, m_strId);
+    GetDlgItemText(IDC_EDIT_PW, m_strPw);
 
+    mysql_init(&Conn);
+    ConnPtr = mysql_real_connect(&Conn, MY_IP, DB_USER, DB_PASS, DB_NAME, 3306, (char*)NULL, 0);
+
+    if (ConnPtr == NULL) {
+        MessageBox(_T("데이터베이스 연결 실패"));
+        return;
+    }
+
+    mysql_query(ConnPtr, "set session character_set_connection=euckr;");
+    mysql_query(ConnPtr, "set session character_set_results=euckr;");
+    mysql_query(ConnPtr, "set session character_set_client=euckr;");
+
+    // 모든 사용자 정보를 가져오는 쿼리
+    char* Query = "SELECT user_id, user_pw FROM user";
+
+    if (mysql_query(ConnPtr, Query)) {
+        TRACE("쿼리 실행 실패: %s\n", mysql_error(ConnPtr));
+        return;
+    }
+
+    Result = mysql_store_result(ConnPtr);
+    if (Result == NULL) {
+        TRACE(_T("내용 없음\n"));
+        return; // 결과가 없으면 종료
+    }
+
+    bool loginSuccess = false; // 로그인 성공 여부를 추적하는 변수
+    while ((Row = mysql_fetch_row(Result)) != NULL) {
+        if (Row[0] == NULL || Row[1] == NULL) {
+            continue; // ID 또는 비밀번호가 NULL인 경우 건너뜀
+        }
+
+        CString dbId(Row[0]); // 데이터베이스에서 가져온 ID
+        CString dbPw(Row[1]); // 데이터베이스에서 가져온 비밀번호
+
+        if (dbId == m_strId) { // ID 비교
+            if (dbPw == m_strPw) { // 비밀번호 비교
+                MessageBox(_T("로그인 성공"));
+                loginSuccess = true; // 로그인 성공 플래그 설정
+                break; // 반복 종료
+            }
+            else {
+                MessageBox(_T("로그인 실패: 비밀번호가 잘못되었습니다."));
+                mysql_free_result(Result); // 메모리 해제
+                mysql_close(ConnPtr); // 연결 해제
+                return; // 비밀번호가 틀린 경우 종료
+            }
+        }
+    }
+
+    mysql_free_result(Result); // 결과 해제
+    mysql_close(ConnPtr); // 연결 해제
+
+    if (loginSuccess) {
+        EndDialog(IDOK); // 로그인 성공 시 대화 상자 종료
+    }
+    else {
+        MessageBox(_T("로그인 실패: ID가 존재하지 않습니다."));
+    }
+}
 
 void CLogInDlg::OnClickedButtonRegister()
 {

@@ -11,22 +11,22 @@
 #define IDD_DIALOG_REGISTER             314
 #define IDD_DIALOG_CKPW                 316
 #define IDC_BUTTON_LOGOUT               1001
-#define IDC_EDIT_PW                     1001
-#define IDC_BUTTON_FRIENDS              1002
-#define IDC_BUTTON_LOGIN                1002
-#define IDC_BUTTON_CHATROOMS            1003
-#define IDC_BUTTON3                     1003
-#define IDC_BUTTON_REGISTER             1003
-#define IDC_BUTTON_SETTINGS             1004
-#define IDC_EDIT_ID                     1004
-#define IDC_STATIC_PROFILE              1005
-#define IDC_EDIT_REGI_NAME              1005
-#define IDC_EDIT_REGI_ID                1006
-#define IDC_EDIT_CKPW                   1006
-#define IDC_EDIT3                       1007
-#define IDC_EDIT_REGI_PW                1007
-#define IDC_BUTTON_EDIT					1008
-#define IDC_BUTTON_WITHDRAW				1009
+#define IDC_EDIT_PW                     1002
+#define IDC_BUTTON_FRIENDS              1003
+#define IDC_BUTTON_LOGIN                1004
+#define IDC_BUTTON_CHATROOMS            1005
+#define IDC_BUTTON3                     1006
+#define IDC_BUTTON_REGISTER             1007
+#define IDC_BUTTON_SETTINGS             1008
+#define IDC_EDIT_ID                     1009
+#define IDC_STATIC_PROFILE              1010
+#define IDC_EDIT_REGI_NAME              1011
+#define IDC_EDIT_REGI_ID                1012
+#define IDC_EDIT_CKPW                   1013
+#define IDC_EDIT3                       1014
+#define IDC_EDIT_REGI_PW                1015
+#define IDC_BUTTON_EDIT                 1016
+#define IDC_BUTTON_WITHDRAW             1017
 
 // Next default values for new objects
 // 
