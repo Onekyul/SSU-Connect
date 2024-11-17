@@ -51,10 +51,7 @@ void CRegisterDlg::OnBnClickedOk()
 		CString Query;
 		
 		Query.Format(
-			_T("INSERT INTO user (user_id, user_pw, user_name,user_friend) VALUES('%s', '%s', '%s','')"),m_StrRegi_name,
-				m_StrRegi_id,
-				m_StrRegi_pw
-		
+			_T("INSERT INTO user (user_id, user_pw, user_name,user_friend) VALUES('%s', '%s', '%s','')"), m_StrRegi_id, m_StrRegi_pw, m_StrRegi_name
 		);
 		
 	

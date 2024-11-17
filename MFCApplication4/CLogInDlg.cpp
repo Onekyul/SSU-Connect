@@ -32,6 +32,7 @@ BEGIN_MESSAGE_MAP(CLogInDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_LOGIN, &CLogInDlg::OnClickedButtonLogin)
 	ON_BN_CLICKED(IDC_BUTTON_REGISTER, &CLogInDlg::OnClickedButtonRegister)
 	ON_EN_CHANGE(IDC_EDIT_PW, &CLogInDlg::OnChangeEditPw)
+    ON_COMMAND(IDOK, &CLogInDlg::OnIdok)
 END_MESSAGE_MAP()
 
 
@@ -128,4 +129,10 @@ void CLogInDlg::OnChangeEditPw()
 	// 이 알림 메시지를 보내지 않습니다.
 
 	// TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+
+void CLogInDlg::OnIdok()
+{
+    // TODO: 여기에 명령 처리기 코드를 추가합니다.
 }

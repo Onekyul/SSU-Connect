@@ -1,2 +1,3 @@
-﻿  CLogInDlg.cpp
-  MFCApplication4.vcxproj -> C:\Users\resu2\OneDrive\바탕 화면\SSU-Connect\x64\Debug\MFCApplication4.exe
+﻿  CRegisterDlg.cpp
+  LINK : D:\Metal Slug _ Versus\SSU-Connect\x64\Debug\MFCApplication4.exe을(를) 찾을 수 없거나 마지막 증분 링크에 의해 빌드되지 않았습니다. 전체 링크를 수행하고 있습니다.
+  MFCApplication4.vcxproj -> D:\Metal Slug _ Versus\SSU-Connect\x64\Debug\MFCApplication4.exe

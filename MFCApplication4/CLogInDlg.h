@@ -25,4 +25,5 @@ public:
 	afx_msg void OnClickedButtonLogin();
 	afx_msg void OnClickedButtonRegister();
 	afx_msg void OnChangeEditPw();
+	afx_msg void OnIdok();
 };
