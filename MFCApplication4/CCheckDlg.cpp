@@ -42,11 +42,17 @@ void CCheckDlg::OnBnClickedOk()
 	CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
 	CString m_strId = pMainFrame->m_strUserId;
 	CString m_strPw = pMainFrame->m_strUserPw;
-	CString m_strCkpw;
-	GetDlgItemText(IDC_EDIT_ID, m_strCkpw);
-	if (m_strCkpw == m_strPw) {
-		EndDialog(IDOK);
 
+	CString m_strCkpw;
+	GetDlgItemText(IDC_EDIT_CKPW, m_strCkpw);
+	MessageBox(m_strCkpw);
+	if (m_strCkpw == m_strPw) {
+		if (AfxMessageBox(_T("정말 회원탈퇴하시겠습니까?"), MB_YESNO) == IDYES) {
+			CString query;
+			query.Format(_T("DELETE FROM user WHERE user_id='%s' AND user_pw='%s'"), pMainFrame->m_strUserId, pMainFrame->m_strUserPw);
+
+		}
+		EndDialog(IDYES);
 	}
 	else {
 		MessageBox(_T("잘못된 비밀번호 입력입니다."));

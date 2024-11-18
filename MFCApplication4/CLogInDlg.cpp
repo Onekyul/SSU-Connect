@@ -6,7 +6,7 @@
 #include "afxdialogex.h"
 #include "CLogInDlg.h"
 #include "CRegisterDlg.h"
-#include "MFCApplication4Doc.h"
+#include "Mainfrm.h"
 #include "resource.h"
 
 
