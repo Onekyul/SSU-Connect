@@ -45,8 +45,7 @@ void CLogInDlg::OnClickedButtonLogin()
     MYSQL* ConnPtr = NULL;
     MYSQL_RES* Result;
     MYSQL_ROW Row;
-    CString m_strId;
-    CString m_strPw;
+    
     GetDlgItemText(IDC_EDIT_ID, m_strId);
     GetDlgItemText(IDC_EDIT_PW, m_strPw);
 
@@ -63,7 +62,7 @@ void CLogInDlg::OnClickedButtonLogin()
     mysql_query(ConnPtr, "set session character_set_client=euckr;");
 
     // 모든 사용자 정보를 가져오는 쿼리
-    char* Query = "SELECT user_id, user_pw FROM user";
+    char* Query = "SELECT user_id, user_pw,user_name FROM user";
 
     if (mysql_query(ConnPtr, Query)) {
         TRACE("쿼리 실행 실패: %s\n", mysql_error(ConnPtr));
@@ -84,9 +83,13 @@ void CLogInDlg::OnClickedButtonLogin()
 
         CString dbId(Row[0]); // 데이터베이스에서 가져온 ID
         CString dbPw(Row[1]); // 데이터베이스에서 가져온 비밀번호
-
+        CString dbName(Row[2]);// 데이터베이스에서 이름가져오기
+        
         if (dbId == m_strId) { // ID 비교
             if (dbPw == m_strPw) { // 비밀번호 비교
+                m_strName = dbName;
+                CString Text;
+             
                 MessageBox(_T("로그인 성공"));
                 loginSuccess = true; // 로그인 성공 플래그 설정
                 break; // 반복 종료

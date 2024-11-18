@@ -36,8 +36,18 @@ END_MESSAGE_MAP()
 
 
 void CCheckDlg::OnBnClickedOk()
+
 {
+	CString m_strCkpw;
+	GetDlgItemText(IDC_EDIT_ID, m_strCkpw);
+	if (m_strCkpw == m_strPw) {
+		EndDialog(IDOK);
+
+	}
+	else {
+		MessageBox(_T("잘못된 비밀번호 입력입니다."));
+	}
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	EndDialog(IDOK);
+	
 	CDialogEx::OnOK();
 }

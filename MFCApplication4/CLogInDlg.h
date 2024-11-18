@@ -4,6 +4,7 @@
 
 // CLogInDlg 대화 상자
 
+
 class CLogInDlg : public CDialogEx
 {
 	DECLARE_DYNAMIC(CLogInDlg)
@@ -26,4 +27,7 @@ public:
 	afx_msg void OnClickedButtonRegister();
 	afx_msg void OnChangeEditPw();
 	afx_msg void OnIdok();
+public:
+	CString m_strId;
+	CString m_strPw;
 };

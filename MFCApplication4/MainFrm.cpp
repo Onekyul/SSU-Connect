@@ -49,17 +49,19 @@ CMainFrame::~CMainFrame()
 }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
-{
+{   
+    
     if (CFrameWnd::OnCreate(lpCreateStruct) == -1)
         return -1;
     SetMenu(NULL);
 
     // 상단 프로필 이름 생성
-    if (!m_profileName.Create(_T("닉네임"), WS_CHILD | WS_VISIBLE | SS_CENTER, CRect(10, 10, 100, 30), this, IDC_STATIC_PROFILE))
-    {
+    if (!m_profileName.Create(_T("이름"), WS_CHILD | WS_VISIBLE | SS_CENTER, CRect(10, 10, 100, 30), this, IDC_STATIC_PROFILE))
+    {   
         TRACE0("프로필 이름 컨트롤을 생성하지 못했습니다.\n");
         return -1;
     }
+        
 
     // 로그아웃 버튼 생성
     if (!m_logoutButton.Create(_T("로그아웃"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(280, 10, 370, 30), this, IDC_BUTTON_LOGOUT))
@@ -165,6 +167,9 @@ void CMainFrame::OnPaint()
 
     dc.MoveTo(0, 500);
     dc.LineTo(400, 500);
+    CString Profile_name;
+    Profile_name.Format(_T("%s"), m_strName);
+    dc.TextOutW(110, 10, Profile_name);
 
     switch (m_currentScreen)
     {
