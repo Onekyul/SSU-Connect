@@ -1,8 +1,13 @@
-﻿  MainFrm.cpp
-C:\Users\resu2\OneDrive\바탕 화면\SSU-Connect\MFCApplication4\MainFrm.cpp(240,11): warning C4101: 'Conn' :참조되지 않은 지역 변수입니다.
+﻿  CChangeDlg.cpp
+  MainFrm.cpp
+  코드를 생성하고 있습니다...
+D:\Metal Slug _ Versus\SSU-Connect\MFCApplication4\CChangeDlg.cpp(54,19): warning C4101: 'Row' :참조되지 않은 지역 변수입니다.
+  (소스 파일 '/CChangeDlg.cpp'을(를) 컴파일하는 중)
+  
+D:\Metal Slug _ Versus\SSU-Connect\MFCApplication4\MainFrm.cpp(242,11): warning C4101: 'Conn' :참조되지 않은 지역 변수입니다.
   (소스 파일 '/MainFrm.cpp'을(를) 컴파일하는 중)
   
-C:\Users\resu2\OneDrive\바탕 화면\SSU-Connect\MFCApplication4\MainFrm.cpp(243,9): warning C4101: 'Stat' :참조되지 않은 지역 변수입니다.
+D:\Metal Slug _ Versus\SSU-Connect\MFCApplication4\MainFrm.cpp(245,9): warning C4101: 'Stat' :참조되지 않은 지역 변수입니다.
   (소스 파일 '/MainFrm.cpp'을(를) 컴파일하는 중)
   
-  MFCApplication4.vcxproj -> C:\Users\resu2\OneDrive\바탕 화면\SSU-Connect\x64\Debug\MFCApplication4.exe
+  MFCApplication4.vcxproj -> D:\Metal Slug _ Versus\SSU-Connect\x64\Debug\MFCApplication4.exe

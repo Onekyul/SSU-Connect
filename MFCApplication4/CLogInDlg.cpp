@@ -6,6 +6,8 @@
 #include "afxdialogex.h"
 #include "CLogInDlg.h"
 #include "CRegisterDlg.h"
+#include "MFCApplication4Doc.h"
+#include "resource.h"
 
 
 // CLogInDlg 대화 상자
@@ -45,7 +47,7 @@ void CLogInDlg::OnClickedButtonLogin()
     MYSQL* ConnPtr = NULL;
     MYSQL_RES* Result;
     MYSQL_ROW Row;
-    
+
     GetDlgItemText(IDC_EDIT_ID, m_strId);
     GetDlgItemText(IDC_EDIT_PW, m_strPw);
 
@@ -84,7 +86,8 @@ void CLogInDlg::OnClickedButtonLogin()
         CString dbId(Row[0]); // 데이터베이스에서 가져온 ID
         CString dbPw(Row[1]); // 데이터베이스에서 가져온 비밀번호
         CString dbName(Row[2]);// 데이터베이스에서 이름가져오기
-        
+       
+
         if (dbId == m_strId) { // ID 비교
             if (dbPw == m_strPw) { // 비밀번호 비교
                 m_strName = dbName;

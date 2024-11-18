@@ -23,9 +23,7 @@
 #define DB_PASS "0000"
 #define DB_NAME "Mydatabase"
 //-----------------------------------------------------------------------------
-extern CString	m_strId;
-extern CString	m_strPw;
-extern CString	m_strName;
+
 
 //-----------------------------------------------------------------------------
 #pragma comment( lib, "libmysql.lib" )

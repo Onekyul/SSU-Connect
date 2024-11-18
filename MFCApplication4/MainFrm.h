@@ -54,4 +54,8 @@ public:
     afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
     bool m_bLogIn;
     afx_msg void OnSize(UINT nType, int cx, int cy);
+    void SetUserInfo(CString Id, CString Pw, CString Name);
+    CString m_strUserId;
+    CString m_strUserPw;
+    CString m_strUserName;
 };

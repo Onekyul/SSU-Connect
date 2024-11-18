@@ -30,4 +30,5 @@ public:
 public:
 	CString m_strId;
 	CString m_strPw;
+	CString m_strName;
 };

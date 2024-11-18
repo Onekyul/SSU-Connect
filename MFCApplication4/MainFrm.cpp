@@ -7,6 +7,7 @@
 #include "MainFrm.h"
 #include "CLogInDlg.h"
 #include "CCheckDlg.h"
+#include "CChangeDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -139,9 +140,9 @@ void CMainFrame::OnSettingsClicked()
 
 }
 void CMainFrame::OnEditProfileClicked() {
-    CCheckDlg CheckPW;
+    CChangeDlg ChangePW;
 
-    if (CheckPW.DoModal() == IDOK) {
+    if (ChangePW.DoModal() == IDOK) {
 
     }
     
@@ -160,6 +161,7 @@ void CMainFrame::OnDeleteAccountClicked() {
 void CMainFrame::OnPaint()
 {
 
+
     CPaintDC dc(this); // 그리기 장치를 위한 DC
 
     dc.MoveTo(0, 30);
@@ -168,7 +170,7 @@ void CMainFrame::OnPaint()
     dc.MoveTo(0, 500);
     dc.LineTo(400, 500);
     CString Profile_name;
-    Profile_name.Format(_T("%s"), m_strName);
+    Profile_name.Format(_T("%s"), m_strUserName);
     dc.TextOutW(110, 10, Profile_name);
 
     switch (m_currentScreen)
@@ -261,7 +263,7 @@ void CMainFrame::OnShowWindow(BOOL bShow, UINT nStatus)
             CLogInDlg login;
             if (login.DoModal() == IDOK && m_bLogIn)
             {
-
+                SetUserInfo(login.m_strId, login.m_strPw, login.m_strName);
                 //DB확인 if문
 
             }
@@ -278,4 +280,13 @@ void CMainFrame::OnSize(UINT nType, int cx, int cy)
         SetWindowPos(NULL, 0, 0, 400, 600, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
     }
     // TODO: 여기에 메시지 처리기 코드를 추가합니다.
+}
+
+
+void CMainFrame::SetUserInfo(CString Id, CString Pw, CString Name)
+{
+    m_strUserId = Id;
+    m_strUserPw = Pw;
+    m_strUserName = Name;
+    // TODO: 여기에 구현 코드 추가.
 }

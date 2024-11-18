@@ -5,6 +5,7 @@
 #include "MFCApplication4.h"
 #include "afxdialogex.h"
 #include "CRegisterDlg.h"
+#include "MFCApplication4Doc.h"
 
 
 // CRegisterDlg 대화 상자

@@ -186,6 +186,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CChangeDlg.h" />
     <ClInclude Include="CCheckDlg.h" />
     <ClInclude Include="CLogInDlg.h" />
     <ClInclude Include="CRegisterDlg.h" />
@@ -199,6 +200,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CChangeDlg.cpp" />
     <ClCompile Include="CCheckDlg.cpp" />
     <ClCompile Include="CLogInDlg.cpp" />
     <ClCompile Include="CRegisterDlg.cpp" />

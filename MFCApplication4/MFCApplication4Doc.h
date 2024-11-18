@@ -35,6 +35,7 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
+public:
 protected:
 
 // 생성된 메시지 맵 함수

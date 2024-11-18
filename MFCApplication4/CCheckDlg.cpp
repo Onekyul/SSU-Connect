@@ -5,7 +5,8 @@
 #include "MFCApplication4.h"
 #include "afxdialogex.h"
 #include "CCheckDlg.h"
-
+#include "MFCApplication4Doc.h"
+#include "MainFrm.h"
 
 // CCheckDlg 대화 상자
 
@@ -38,6 +39,9 @@ END_MESSAGE_MAP()
 void CCheckDlg::OnBnClickedOk()
 
 {
+	CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
+	CString m_strId = pMainFrame->m_strUserId;
+	CString m_strPw = pMainFrame->m_strUserPw;
 	CString m_strCkpw;
 	GetDlgItemText(IDC_EDIT_ID, m_strCkpw);
 	if (m_strCkpw == m_strPw) {
