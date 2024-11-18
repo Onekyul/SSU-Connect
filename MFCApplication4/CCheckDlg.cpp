@@ -51,11 +51,24 @@ void CCheckDlg::OnBnClickedOk()
 			CString query;
 			query.Format(_T("DELETE FROM user WHERE user_id='%s' AND user_pw='%s'"), pMainFrame->m_strUserId, pMainFrame->m_strUserPw);
 
+			CT2A asciiQuery(query); // CString to ASCII
+			const char* queryChar = asciiQuery;
+			MYSQL Conn;
+			mysql_init(&Conn);
+			MYSQL* ConnPtr = mysql_real_connect(&Conn, MY_IP, DB_USER, DB_PASS, DB_NAME, 3306, (char*)NULL, 0);
+			int Stat = mysql_query(ConnPtr, queryChar);
+			if (Stat != 0) {
+				MessageBox(NULL, _T("쿼리 오류"), MB_OK);
+			}
+
+			Stat = mysql_query(ConnPtr, queryChar);
+
 		}
 		EndDialog(IDYES);
 	}
 	else {
 		MessageBox(_T("잘못된 비밀번호 입력입니다."));
+		EndDialog(IDNO);
 	}
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	

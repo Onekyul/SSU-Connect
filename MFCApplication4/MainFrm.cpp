@@ -152,7 +152,7 @@ void CMainFrame::OnDeleteAccountClicked() {
     CCheckDlg CheckPW;
 
     if (CheckPW.DoModal() == IDOK) {
-
+        DestroyWindow();
     }
 
 }
@@ -170,8 +170,8 @@ void CMainFrame::OnPaint()
     dc.MoveTo(0, 500);
     dc.LineTo(400, 500);
     CString Profile_name;
-    Profile_name.Format(_T("%s"), m_strUserName);
-    dc.TextOutW(110, 10, Profile_name);
+    
+    dc.TextOutW(110, 10, m_strUserName);
 
     switch (m_currentScreen)
     {
