@@ -83,6 +83,7 @@ void CChangeDlg::OnBnClickedOk()
 
         mysql_close(ConnPtr); // 연결 해제
         MessageBox(_T("비밀번호 변경 성공"));
+        pMainFrame->SetUserInfo(m_strId, m_strNewpw, pMainFrame->m_strUserName);
 	}
 	CDialog::OnOK();
 }
