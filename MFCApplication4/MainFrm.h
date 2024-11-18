@@ -2,6 +2,7 @@
 
 #pragma once
 
+
 class CMainFrame : public CFrameWnd
 {
 protected:
@@ -29,6 +30,9 @@ protected:
     CButton m_settingsButton;       // 설정 버튼
     CButton m_editProfileButton;    // 회원정보 변경 버튼
     CButton m_deleteAccountButton;  // 회원탈퇴 버튼
+    CButton m_createChatRoomButton;
+    CListBox m_chatRoomList;
+    CButton m_joinChatRoomButton; // "채팅방 참여하기" 버튼
 
 public:
     virtual ~CMainFrame();
@@ -42,6 +46,8 @@ protected:
     afx_msg void OnSettingsClicked();
     afx_msg void OnEditProfileClicked();
     afx_msg void OnDeleteAccountClicked();
+    afx_msg void OnCreateChatRoomClicked();
+    afx_msg void OnJoinChatRoomClicked(); // "채팅방 참여하기" 클릭 이벤트
     
 
     // 설정 화면을 그리는 함수
@@ -58,4 +64,5 @@ public:
     CString m_strUserId;
     CString m_strUserPw;
     CString m_strUserName;
+    CString chatname;
 };

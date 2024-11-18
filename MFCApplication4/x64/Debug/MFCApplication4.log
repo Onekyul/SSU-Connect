@@ -1,5 +1,2 @@
-﻿  CChangeDlg.cpp
-D:\Metal Slug _ Versus\SSU-Connect\MFCApplication4\CChangeDlg.cpp(54,19): warning C4101: 'Row' :참조되지 않은 지역 변수입니다.
-  (소스 파일 '/CChangeDlg.cpp'을(를) 컴파일하는 중)
-  
-  MFCApplication4.vcxproj -> D:\Metal Slug _ Versus\SSU-Connect\x64\Debug\MFCApplication4.exe
+﻿  CChatRoom.cpp
+  MFCApplication4.vcxproj -> C:\Users\soohan\Desktop\2-2강의자료\윈도우프로그래밍및실습\SSUConnect_Practice\SSU-Connect\x64\Debug\MFCApplication4.exe

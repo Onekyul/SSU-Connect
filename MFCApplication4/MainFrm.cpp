@@ -8,6 +8,8 @@
 #include "CLogInDlg.h"
 #include "CCheckDlg.h"
 #include "CChangeDlg.h"
+#include "CChatRoomNameDlg.h"
+#include "CChatRoom.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -25,6 +27,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
     ON_BN_CLICKED(IDC_BUTTON_SETTINGS, &CMainFrame::OnSettingsClicked)
     ON_BN_CLICKED(IDC_BUTTON_EDIT, &CMainFrame::OnEditProfileClicked)
     ON_BN_CLICKED(IDC_BUTTON_WITHDRAW,&CMainFrame::OnDeleteAccountClicked)
+    ON_BN_CLICKED(IDC_BUTTON_CREATE_CHATROOM, &CMainFrame::OnCreateChatRoomClicked) // "채팅방 만들기" 버튼
+    ON_BN_CLICKED(IDC_BUTTON_JOIN_CHATROOM, &CMainFrame::OnJoinChatRoomClicked) // 매핑 확인
     ON_WM_PAINT()
     ON_WM_SHOWWINDOW()
     ON_WM_SIZE()
@@ -88,6 +92,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
         TRACE0("설정 버튼을 생성하지 못했습니다.\n");
         return -1;
     }
+    // 채팅방 리스트박스 생성
+    
 
     SetWindowPos(NULL, 100, 100, 400, 600, SWP_NOZORDER | SWP_NOACTIVATE);
 
@@ -160,8 +166,6 @@ void CMainFrame::OnDeleteAccountClicked() {
 // OnPaint 함수에서 화면 상태에 맞는 내용을 그립니다.
 void CMainFrame::OnPaint()
 {
-
-
     CPaintDC dc(this); // 그리기 장치를 위한 DC
 
     dc.MoveTo(0, 30);
@@ -169,24 +173,42 @@ void CMainFrame::OnPaint()
 
     dc.MoveTo(0, 500);
     dc.LineTo(400, 500);
-    CString Profile_name;
-    
     dc.TextOutW(110, 10, m_strUserName);
-
     switch (m_currentScreen)
     {
     case SCREEN_FRIENDS:
-        dc.TextOutW(100, 100, _T("친구 목록 화면"));
+        //m_chatRoomList.Create(WS_CHILD | WS_VISIBLE | LBS_STANDARD, CRect(10, 80, 380, 400), this, IDC_STATIC);
         break;
 
     case SCREEN_CHATROOMS:
-        dc.TextOutW(100, 100, _T("채팅방 화면"));
+        //m_chatRoomList.Create(WS_CHILD | WS_VISIBLE | LBS_STANDARD, CRect(10, 80, 380, 400), this, IDC_STATIC);
+
+        // "채팅방 만들기" 버튼 생성
+        if (!m_createChatRoomButton.GetSafeHwnd())
+        {
+            m_createChatRoomButton.Create(
+                _T("채팅방 만들기"),
+                WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+                CRect(10, 40, 190, 70), // 반으로 크기를 줄임
+                this,
+                IDC_BUTTON_CREATE_CHATROOM);
+        }
+
+        // "채팅방 참여하기" 버튼 생성
+        if (!m_joinChatRoomButton.GetSafeHwnd())
+        {
+            m_joinChatRoomButton.Create(
+                _T("채팅방 참여하기"),
+                WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+                CRect(200, 40, 380, 70), // 나머지 반 크기
+                this,
+                IDC_BUTTON_JOIN_CHATROOM); // 새로운 버튼 ID
+        }
         break;
 
     case SCREEN_SETTINGS:
         dc.TextOutW(120, 150, _T("프로필 사진"));
         dc.TextOutW(120, 300, _T("사용자 이름"));
-        
 
         // 회원정보 변경 버튼 생성
         if (!m_editProfileButton.GetSafeHwnd())
@@ -194,13 +216,11 @@ void CMainFrame::OnPaint()
             m_editProfileButton.Create(_T("회원정보 변경"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(120, 350, 240, 380), this, IDC_BUTTON_EDIT);
         }
 
-        // 로그아웃 버튼 생성
         if (m_logoutButton.GetSafeHwnd())
         {
             m_logoutButton.MoveWindow(120, 385, 120, 30);
         }
 
-        // 회원탈퇴 버튼 생성
         if (!m_deleteAccountButton.GetSafeHwnd())
         {
             m_deleteAccountButton.Create(_T("회원탈퇴"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(120, 420, 240, 450), this, IDC_BUTTON_WITHDRAW);
@@ -290,3 +310,61 @@ void CMainFrame::SetUserInfo(CString Id, CString Pw, CString Name)
     m_strUserName = Name;
     // TODO: 여기에 구현 코드 추가.
 }
+void CMainFrame::OnCreateChatRoomClicked()
+{
+    CChatRoomNameDlg dlg;
+    if (dlg.DoModal() == IDOK)
+    {
+        if (!dlg.m_chatRoomName.IsEmpty())
+        {
+            m_chatRoomList.AddString(dlg.m_chatRoomName);  // 채팅방 이름 추가
+
+            // SQL 텍스트 템플릿
+            CString query;
+            query.Format(_T("CREATE TABLE `%s` (name VARCHAR(100) NOT NULL, chat_time DATETIME DEFAULT CURRENT_TIMESTAMP, message TEXT NOT NULL)"), dlg.m_chatRoomName);
+
+
+            CT2A asciiQuery(query); // CString to ASCII
+            const char* queryChar = asciiQuery;
+            MYSQL Conn;
+            mysql_init(&Conn);
+            MYSQL* ConnPtr = mysql_real_connect(&Conn, MY_IP, DB_USER, DB_PASS, DB_NAME, 3306, (char*)NULL, 0);
+            int Stat = mysql_query(ConnPtr, queryChar);
+            if (Stat != 0) {
+                MessageBox(NULL, _T("쿼리 오류"), MB_OK);
+            }
+
+            Stat = mysql_query(ConnPtr, queryChar);
+
+            // MySQL 연결 닫기
+            mysql_close(ConnPtr);
+        }
+        else
+        {
+            AfxMessageBox(_T("채팅방 이름을 입력해주세요."));
+        }
+    }
+}
+void CMainFrame::OnJoinChatRoomClicked()
+{
+    CChatRoomNameDlg d_join;
+    CChatRoom dlg;
+    if (d_join.DoModal() == IDOK)
+    {
+        if (!d_join.m_chatRoomName.IsEmpty())
+        {
+            CString message;
+            message.Format(_T("채팅방 '%s'에 참여합니다."), d_join.m_chatRoomName);
+            AfxMessageBox(message);
+            // TODO: 채팅방 참여 로직 추가
+            chatname = d_join.m_chatRoomName;
+            dlg.DoModal();
+
+        }
+        else
+        {
+            AfxMessageBox(_T("채팅방 이름을 입력해주세요."));
+        }
+    }
+}
+

@@ -115,11 +115,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>"C:\Program Files\MySQL\MySQL Server 8.0\include"</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>"C:\Program Files\MySQL\MySQL Server 9.1\include"</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>"C:\Program Files\MySQL\MySQL Server 8.0\lib"</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>"C:\Program Files\MySQL\MySQL Connector C++ 9.1\lib64"</AdditionalLibraryDirectories>
       <AdditionalDependencies>libmysql.lib;</AdditionalDependencies>
     </Link>
     <Midl>
@@ -187,6 +187,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CChangeDlg.h" />
+    <ClInclude Include="CChatRoom.h" />
+    <ClInclude Include="CChatRoomNameDlg.h" />
     <ClInclude Include="CCheckDlg.h" />
     <ClInclude Include="CLogInDlg.h" />
     <ClInclude Include="CRegisterDlg.h" />
@@ -201,6 +203,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CChangeDlg.cpp" />
+    <ClCompile Include="CChatRoom.cpp" />
+    <ClCompile Include="CChatRoomNameDlg.cpp" />
     <ClCompile Include="CCheckDlg.cpp" />
     <ClCompile Include="CLogInDlg.cpp" />
     <ClCompile Include="CRegisterDlg.cpp" />
