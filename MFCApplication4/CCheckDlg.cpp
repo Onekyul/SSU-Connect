@@ -45,7 +45,7 @@ void CCheckDlg::OnBnClickedOk()
 
 	CString m_strCkpw;
 	GetDlgItemText(IDC_EDIT_CKPW, m_strCkpw);
-	MessageBox(m_strCkpw);
+	
 	if (m_strCkpw == m_strPw) {
 		if (AfxMessageBox(_T("정말 회원탈퇴하시겠습니까?"), MB_YESNO) == IDYES) {
 			CString query;
