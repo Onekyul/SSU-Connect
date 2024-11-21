@@ -250,6 +250,13 @@ void CMainFrame::RemoveViews()
     {
         m_deleteAccountButton.DestroyWindow(); // 두 번째 버튼 제거
     }
+    if (m_joinChatRoomButton.GetSafeHwnd())
+    {
+        m_joinChatRoomButton.DestroyWindow();
+    }
+    if (m_createChatRoomButton.GetSafeHwnd()) {
+        m_createChatRoomButton.DestroyWindow();
+    }
 }
 
 
@@ -264,14 +271,6 @@ void CMainFrame::OnShowWindow(BOOL bShow, UINT nStatus)
     
     int Stat;
 
-  
-    //ConnPtr = mysql_real_connect(&Conn, MY_IP, DB_USER, DB_PASS, DB_NAME, 3306, (char*)NULL, 0);
-
-    //mysql_query(ConnPtr, "set session character_set_connection=euckr;");
-    //mysql_query(ConnPtr, "set session character_set_results=euckr;");
-    //mysql_query(ConnPtr, "set session character_set_client=euckr;");
-
-   
     
 
     if (bShow)  // 창이 처음 보일 때만 실행
@@ -284,7 +283,6 @@ void CMainFrame::OnShowWindow(BOOL bShow, UINT nStatus)
             if (login.DoModal() == IDOK && m_bLogIn)
             {
                 SetUserInfo(login.m_strId, login.m_strPw, login.m_strName);
-                //DB확인 if문
 
             }
         }   

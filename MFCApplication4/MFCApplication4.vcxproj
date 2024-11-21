@@ -115,11 +115,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>"C:\Program Files\MySQL\MySQL Server 9.1\include"</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>"C:\Program Files\MySQL\MySQL Server 8.0\include"</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>"C:\Program Files\MySQL\MySQL Connector C++ 9.1\lib64"</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files\MySQL\MySQL Server 8.0\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>libmysql.lib;</AdditionalDependencies>
     </Link>
     <Midl>
