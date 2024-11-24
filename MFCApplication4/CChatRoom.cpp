@@ -36,104 +36,38 @@ void CChatRoom::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CChatRoom, CDialogEx)
     ON_BN_CLICKED(IDC_BUTTON_SEND, &CChatRoom::OnBnClickedButtonSend)
-    ON_MESSAGE(UM_ACCEPT, &CChatRoom::OnAccept)
     ON_MESSAGE(UM_RECEIVE, OnReceive)
 END_MESSAGE_MAP()
 
 
 // CChatRoom 메시지 처리기
 
-LPARAM CChatRoom::OnAccept(WPARAM wParam, LPARAM lParam) {
-    try {
-        int tmp = m_socServer.m_index.front();
-
-        CString number;
-        number.Format(_T("%d"), tmp);
-
-        m_socCom[tmp] = new CSocCom();
-        m_socCom[tmp] = m_socServer.GetAcceptSocCom();
-
-        m_socServer.m_index.pop_front();
-        m_using.push_back(tmp);
-
-        m_socCom[tmp]->m_index = tmp;
-        m_socCom[tmp]->Init(this->m_hWnd);
-
-        // CString을 UTF-8로 변환 후 전송
-        CString connectMessage = SOC_CLIENT_CONNECT + number;
-        CStringA connectMessageA(CW2A(connectMessage, CP_UTF8));
-        m_socCom[tmp]->Send(connectMessageA, 256);
-
-        UpdateData(FALSE);
-        return TRUE;
-    }
-    catch (CException* ex) {
-        ex->ReportError();
-        return FALSE;
-    }
-}
-
-
 
 LPARAM CChatRoom::OnReceive(WPARAM wParam, LPARAM lParam) {
-    CString Query;
-    CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
-    CString username = pMainFrame->m_strUserName;
-    CString chatnameDlg = pMainFrame->chatname;
+    UpdateData(TRUE);
     char pTmp[256];
     CString strTmp;
     memset(pTmp, '\0', sizeof(pTmp));
 
     // 데이터를 소켓으로부터 수신
-    m_socCom[wParam]->Receive(pTmp, sizeof(pTmp));
+    m_socCom.Receive(pTmp, sizeof(pTmp));
 
     // 수신된 데이터를 UTF-8에서 유니코드로 변환
     strTmp = CA2W(pTmp, CP_UTF8);
 
-    if (strTmp.Compare(SOC_CLIENT_DISCONNECT) == 0) {
-        m_socServer.m_socCom[wParam].Close();
-        m_socCom[wParam]->Close();
-        m_socServer.m_index.push_back(wParam);
-        m_using.erase(std::remove(m_using.begin(), m_using.end(), wParam), m_using.end());
+    if (strTmp.Find(SOC_CLIENT_CONNECT) == 0) {
+        m_strUserID.Format(_T("사용자 : %s"), strTmp.Right(1));
     }
     else {
-        CString id;
-        id.Format(_T("%d"), wParam);
-
         // 변환된 데이터를 목록에 추가
         int i = m_List_chating.GetCount();
-        CString displayStr;
-        displayStr.Format(_T("사용자%s : %s"), id, strTmp);
-        m_List_chating.InsertString(i, displayStr);
-
-        for (int i : m_using) {
-            if (i != wParam) {
-                CString sendStr;
-                sendStr.Format(_T("사용자%s : %s"), id, strTmp);
-                CStringA sendStrA(CW2A(sendStr, CP_UTF8));
-                m_socCom[i]->Send(sendStrA, 256);
-                Query.Format(
-                    _T("INSERT INTO `%s` (name, message) VALUES ('%s', '%s')"),
-                    chatnameDlg, username, sendStrA
-                );
-                CT2A asciiQuery(Query); // CString to ASCII
-                const char* queryChar = asciiQuery;
-
-
-
-                MYSQL Conn;
-                mysql_init(&Conn);
-                MYSQL* ConnPtr = mysql_real_connect(&Conn, MY_IP, DB_USER, DB_PASS, DB_NAME, 3306, (char*)NULL, 0);
-                int Stat = mysql_query(ConnPtr, queryChar);
-                if (Stat != 0) {
-                    MessageBox(NULL, _T("쿼리 오류"), MB_OK);
-                }
-            }
-        }
+        m_List_chating.InsertString(i, strTmp);
     }
 
+    UpdateData(FALSE);
     return TRUE;
 }
+
 
 
 BOOL CChatRoom::OnInitDialog()
@@ -141,16 +75,11 @@ BOOL CChatRoom::OnInitDialog()
     CDialogEx::OnInitDialog();
 
     // TODO:  여기에 추가 초기화 작업을 추가합니다.
-    for (int i = 0; i < MAX_CLIENT_COUNT; i++) {
-        m_socServer.m_index.push_back(i);
-    }
-    CString ipAddress = _T("10.21.30.220"); // 원하는 IP 주소로 변경
-    UINT port = 5000; // 원하는 포트 번호로 설정
-
-    m_socServer.Create(port);
-    m_socServer.Bind(port, ipAddress);
-    m_socServer.Listen();
-    m_socServer.Init(this->m_hWnd);
+    m_strIP = _T("10.21.30.220");
+    UpdateData(TRUE);
+    m_socCom.Create();
+    m_socCom.Connect(m_strIP, 5000);
+    m_socCom.Init(this->m_hWnd);
 
     CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
     CString chatnameDlg = pMainFrame->chatname;
@@ -233,19 +162,6 @@ BOOL CChatRoom::OnInitDialog()
 void CChatRoom::OnBnClickedButtonSend()
 {
     // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-    CString Query;
-    CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
-    CString username = pMainFrame->m_strUserName;
-    CString chatnameDlg = pMainFrame->chatname;
-    CString text;
-    GetDlgItemText(IDC_EDIT_SEND, text);
-    Query.Format(
-        _T("INSERT INTO `%s` (name, message) VALUES ('%s', '%s')"),
-        chatnameDlg, username, text
-    );
-
-
-    // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
     UpdateData(TRUE);
     char pTmp[256];
     CString strTmp;
@@ -253,39 +169,21 @@ void CChatRoom::OnBnClickedButtonSend()
     // 버퍼 초기화
     memset(pTmp, '\0', sizeof(pTmp));
 
-    // "관리자: " 메시지를 맨 앞에 추가
-    strncpy_s(pTmp, sizeof(pTmp), "관리자 : ", _TRUNCATE);
-
-    // CString -> UTF-8 -> char 배열 복사
+    // CString을 UTF-8로 변환
     CW2A strSendA(m_strSend, CP_UTF8);
-    strcat_s(pTmp, sizeof(pTmp), strSendA);
-
+    strncpy_s(pTmp, sizeof(pTmp), strSendA, _TRUNCATE);
     m_strSend.Empty();
 
     // 데이터를 소켓을 통해 전송
-    for (int i : m_using) {
-        m_socCom[i]->Send(pTmp, sizeof(pTmp));
-    }
+    m_socCom.Send(pTmp, sizeof(pTmp));
 
     // 복사된 데이터를 UTF-8에서 유니코드로 변환하여 목록에 추가
     CStringW strConverted(CA2W(pTmp, CP_UTF8));
     int i = m_List_chating.GetCount();
-    m_List_chating.InsertString(i, strConverted);
+    CString combinedStr;
+    combinedStr.Format(_T("사용자%d: %s"), myUserId, strConverted);
+    m_List_chating.InsertString(i, combinedStr);
 
     UpdateData(FALSE);
-
-
-    CT2A asciiQuery(Query); // CString to ASCII
-    const char* queryChar = asciiQuery;
-
-
-
-    MYSQL Conn;
-    mysql_init(&Conn);
-    MYSQL* ConnPtr = mysql_real_connect(&Conn, MY_IP, DB_USER, DB_PASS, DB_NAME, 3306, (char*)NULL, 0);
-    int Stat = mysql_query(ConnPtr, queryChar);
-    if (Stat != 0) {
-        MessageBox(NULL, _T("쿼리 오류"), MB_OK);
-    }
 }
 

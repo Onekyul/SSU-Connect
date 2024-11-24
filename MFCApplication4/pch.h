@@ -12,7 +12,6 @@
 
 #pragma once
 #include <afxsock.h>
-#include "CSocServer.h"
 #include "CSocCom.h"
 
 #define UM_ACCEPT WM_USER+1

@@ -1,9 +1,9 @@
 ﻿#pragma once
 
 // CSocCom 명령 대상
-// 통신용 소켓
+#include <afxsock.h>
+
 #define UM_RECEIVE WM_USER+2
-#define MAX_CLIENT_COUNT 3
 
 #define SOC_CLIENT_CONNECT _T("접속성공")
 #define SOC_CLIENT_DISCONNECT _T("클라이언트 종료")
@@ -15,7 +15,7 @@ public:
 	virtual ~CSocCom();
 
 	HWND m_hWnd;
-	void CSocCom::Init(HWND hwnd);
+	void CSocCom::Init(HWND hWnd);
 	virtual void OnReceive(int nErrorCode);
 
 	int m_index;

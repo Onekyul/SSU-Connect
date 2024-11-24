@@ -1,9 +1,11 @@
-﻿  CChatRoom.cpp
-C:\Users\송성환\Documents\GitHub\SSU-Connect\MFCApplication4\CChatRoom.cpp(96,39): warning C4244: '인수': 'WPARAM'에서 '_Ty'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\송성환\Documents\GitHub\SSU-Connect\MFCApplication4\CChatRoom.cpp(96,39): warning C4244:         with
-C:\Users\송성환\Documents\GitHub\SSU-Connect\MFCApplication4\CChatRoom.cpp(96,39): warning C4244:         [
-C:\Users\송성환\Documents\GitHub\SSU-Connect\MFCApplication4\CChatRoom.cpp(96,39): warning C4244:             _Ty=int
-C:\Users\송성환\Documents\GitHub\SSU-Connect\MFCApplication4\CChatRoom.cpp(96,39): warning C4244:         ]
-  (소스 파일 '/CChatRoom.cpp'을(를) 컴파일하는 중)
+﻿  CSocCom.cpp
+  MainFrm.cpp
+C:\Users\송성환\Desktop\SSU-Connect\MFCApplication4\MainFrm.cpp(269,11): warning C4101: 'Conn' :참조되지 않은 지역 변수입니다.
+  (소스 파일 '/MainFrm.cpp'을(를) 컴파일하는 중)
   
-  MFCApplication4.vcxproj -> C:\Users\송성환\Documents\GitHub\SSU-Connect\x64\Debug\MFCApplication4.exe
+C:\Users\송성환\Desktop\SSU-Connect\MFCApplication4\MainFrm.cpp(272,9): warning C4101: 'Stat' :참조되지 않은 지역 변수입니다.
+  (소스 파일 '/MainFrm.cpp'을(를) 컴파일하는 중)
+  
+  MFCApplication4View.cpp
+  코드를 생성하고 있습니다...
+  MFCApplication4.vcxproj -> C:\Users\송성환\Desktop\SSU-Connect\x64\Debug\MFCApplication4.exe

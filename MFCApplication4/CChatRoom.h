@@ -2,6 +2,7 @@
 #include "afxdialogex.h"
 #include "MainFrm.h"
 #include "pch.h"
+#include "CSocCom.h"
 
 // CChatRoom 대화 상자
 
@@ -13,8 +14,7 @@ public:
 	CChatRoom(CWnd* pParent = nullptr);   // 표준 생성자입니다.
 	virtual ~CChatRoom();
 
-	CSocServer m_socServer;
-	CSocCom* m_socCom[MAX_CLIENT_COUNT];
+	CSocCom m_socCom;
 
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
@@ -31,9 +31,10 @@ public:
 	CListBox m_List_chating;
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedButtonSend();
-	afx_msg LPARAM OnAccept(WPARAM wParam, LPARAM lParam);
 	afx_msg LPARAM OnReceive(WPARAM wParam, LPARAM lParam);
-	CString m_strStatus;
-	std::list<int> m_using;
+	CString m_strUserID;
+	//afx_msg void OnBnClickedCancel();
+	int myUserId;
 	CString m_strSend;
+	CString m_strIP;
 };

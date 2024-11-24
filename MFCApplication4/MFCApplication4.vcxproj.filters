@@ -57,9 +57,6 @@
     <ClInclude Include="CChatRoom.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="CSocServer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="CSocCom.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -96,9 +93,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="CChatRoom.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="CSocServer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="CSocCom.cpp">
