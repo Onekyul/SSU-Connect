@@ -39,6 +39,8 @@
 #define IDC_BUTTON_WITHDRAW             1017
 #define IDC_BUTTON_CREATE_CHATROOM      1018
 #define IDC_BUTTON_JOIN_CHATROOM        1019
+#define IDC_LIST_CHATROOM 1010 // 채팅방 리스트 박스 ID
+#define IDC_LIST_FRIENDS            1020
 
 // Next default values for new objects
 // 

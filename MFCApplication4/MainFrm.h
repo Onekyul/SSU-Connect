@@ -33,6 +33,7 @@ protected:
     CButton m_createChatRoomButton;
     CListBox m_chatRoomList;
     CButton m_joinChatRoomButton; // "채팅방 참여하기" 버튼
+    CListBox m_friendsList;
 
 public:
     virtual ~CMainFrame();

@@ -1,11 +1,8 @@
-﻿  CSocCom.cpp
-  MainFrm.cpp
-C:\Users\송성환\Desktop\SSU-Connect\MFCApplication4\MainFrm.cpp(269,11): warning C4101: 'Conn' :참조되지 않은 지역 변수입니다.
+﻿  MainFrm.cpp
+C:\Users\donghyeon\Documents\GitHub\SSU-Connect\MFCApplication4\MainFrm.cpp(380,11): warning C4101: 'Conn' :참조되지 않은 지역 변수입니다.
   (소스 파일 '/MainFrm.cpp'을(를) 컴파일하는 중)
   
-C:\Users\송성환\Desktop\SSU-Connect\MFCApplication4\MainFrm.cpp(272,9): warning C4101: 'Stat' :참조되지 않은 지역 변수입니다.
+C:\Users\donghyeon\Documents\GitHub\SSU-Connect\MFCApplication4\MainFrm.cpp(383,9): warning C4101: 'Stat' :참조되지 않은 지역 변수입니다.
   (소스 파일 '/MainFrm.cpp'을(를) 컴파일하는 중)
   
-  MFCApplication4View.cpp
-  코드를 생성하고 있습니다...
-  MFCApplication4.vcxproj -> C:\Users\송성환\Desktop\SSU-Connect\x64\Debug\MFCApplication4.exe
+  MFCApplication4.vcxproj -> C:\Users\donghyeon\Documents\GitHub\SSU-Connect\x64\Debug\MFCApplication4.exe
