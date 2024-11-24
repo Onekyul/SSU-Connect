@@ -192,6 +192,8 @@
     <ClInclude Include="CCheckDlg.h" />
     <ClInclude Include="CLogInDlg.h" />
     <ClInclude Include="CRegisterDlg.h" />
+    <ClInclude Include="CSocCom.h" />
+    <ClInclude Include="CSocServer.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="MFCApplication4.h" />
@@ -208,6 +210,8 @@
     <ClCompile Include="CCheckDlg.cpp" />
     <ClCompile Include="CLogInDlg.cpp" />
     <ClCompile Include="CRegisterDlg.cpp" />
+    <ClCompile Include="CSocCom.cpp" />
+    <ClCompile Include="CSocServer.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="MFCApplication4.cpp" />
     <ClCompile Include="MFCApplication4Doc.cpp" />

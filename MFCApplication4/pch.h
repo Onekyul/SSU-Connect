@@ -9,6 +9,16 @@
 
 // 여기에 미리 컴파일하려는 헤더 추가
 #include "framework.h"
+
+#pragma once
+#include <afxsock.h>
+#include "CSocServer.h"
+#include "CSocCom.h"
+
+#define UM_ACCEPT WM_USER+1
+#define UM_RECEIVE WM_USER+2
+
+#include "framework.h"
 //MYSQL 관련헤더 ----------------------------------------------------------
 #include <mysql.h>
 #include <afxsock.h>
@@ -20,7 +30,7 @@
 //DB연결 초기화 관련헤더 ----------------------------------------------------
 #define MY_IP "localhost"
 #define DB_USER "root"
-#define DB_PASS "0000"
+#define DB_PASS "thdtjdghks@"
 #define DB_NAME "Mydatabase"
 //-----------------------------------------------------------------------------
 
