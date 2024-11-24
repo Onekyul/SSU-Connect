@@ -75,11 +75,11 @@ BOOL CChatRoom::OnInitDialog()
     CDialogEx::OnInitDialog();
 
     // TODO:  여기에 추가 초기화 작업을 추가합니다.
-    m_strIP = _T("10.21.30.220");
+    /*m_strIP = _T("10.21.30.220");
     UpdateData(TRUE);
     m_socCom.Create();
     m_socCom.Connect(m_strIP, 5000);
-    m_socCom.Init(this->m_hWnd);
+    m_socCom.Init(this->m_hWnd);*/
 
     CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
     CString chatnameDlg = pMainFrame->chatname;

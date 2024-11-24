@@ -29,7 +29,7 @@
 //DB연결 초기화 관련헤더 ----------------------------------------------------
 #define MY_IP "localhost"
 #define DB_USER "root"
-#define DB_PASS "ehrtnfl99@"
+#define DB_PASS ""
 #define DB_NAME "Mydatabase"
 //-----------------------------------------------------------------------------
 

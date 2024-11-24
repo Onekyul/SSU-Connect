@@ -67,8 +67,9 @@ void CCheckDlg::OnBnClickedOk()
 		EndDialog(IDYES);
 	}
 	else {
-		MessageBox(_T("잘못된 비밀번호 입력입니다."));
-		EndDialog(IDNO);
+		MessageBox(_T("잘못된 비밀번호입니다. 다시 입력하세요."), _T("Error"), MB_ICONERROR);
+		SetDlgItemText(IDC_EDIT_CKPW, _T("")); // 입력한 비밀번호 초기화
+		return; // 다이얼로그를 종료하지 않고 그대로 유지
 	}
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	

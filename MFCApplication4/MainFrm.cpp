@@ -55,7 +55,7 @@ CMainFrame::~CMainFrame()
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
-
+    m_currentScreen = SCREEN_FRIENDS;
     if (CFrameWnd::OnCreate(lpCreateStruct) == -1)
         return -1;
     SetMenu(NULL);
@@ -94,7 +94,55 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
     }
     // 채팅방 리스트박스 생성
 
+    if (!m_friendsList.GetSafeHwnd())
+    {
+        // 친구 리스트 박스 생성
+        m_friendsList.Create(
+            WS_CHILD | WS_VISIBLE | LBS_STANDARD,
+            CRect(10, 80, 380, 400), this, IDC_LIST_FRIENDS);
 
+        MYSQL Conn;
+        MYSQL* ConnPtr = NULL;
+        MYSQL_RES* Result;
+        MYSQL_ROW Row;
+
+        mysql_init(&Conn);
+        ConnPtr = mysql_real_connect(&Conn, MY_IP, DB_USER, DB_PASS, DB_NAME, 3306, (char*)NULL, 0);
+
+        if (ConnPtr == NULL) {
+            MessageBox(_T("데이터베이스 연결 실패"));
+        }
+
+        mysql_query(ConnPtr, "set session character_set_connection=euckr;");
+        mysql_query(ConnPtr, "set session character_set_results=euckr;");
+        mysql_query(ConnPtr, "set session character_set_client=euckr;");
+
+        char* Query = "SELECT user_name FROM user";
+
+        if (mysql_query(ConnPtr, Query)) {
+            TRACE("쿼리 실행 실패: %s\n", mysql_error(ConnPtr));
+            mysql_close(ConnPtr); // 연결 해제
+        }
+
+        // 결과를 저장
+        Result = mysql_store_result(ConnPtr);
+        if (Result == NULL) {
+            TRACE(_T("쿼리 결과가 없습니다.\n"));
+            mysql_close(ConnPtr); // 연결 해제
+        }
+
+        while ((Row = mysql_fetch_row(Result)) != NULL) {
+            if (Row[0] != NULL) { // Row[0]이 NULL인지 확인
+                CString dbName(Row[0]); // 데이터베이스에서 이름 가져오기
+                m_friendsList.AddString(dbName); // 리스트박스에 이름 추가
+            }
+        }
+
+
+
+        mysql_free_result(Result); // 결과 해제
+        mysql_close(ConnPtr); // 연결 해제
+    }
     SetWindowPos(NULL, 100, 100, 400, 600, SWP_NOZORDER | SWP_NOACTIVATE);
 
     return 0;
@@ -222,7 +270,12 @@ void CMainFrame::OnChatRoomsClicked()
             while ((row = mysql_fetch_row(res)) != NULL)
             {
                 CString tableName(row[0]); // 첫 번째 컬럼이 테이블 이름
-                m_chatRoomList.AddString(tableName); // 리스트 박스에 추가
+
+                // 'user' 테이블 제외 조건 추가
+                if (tableName.CompareNoCase(_T("user")) != 0)
+                {
+                    m_chatRoomList.AddString(tableName); // 리스트 박스에 추가
+                }
             }
             mysql_free_result(res);
         }
@@ -241,6 +294,7 @@ void CMainFrame::OnChatRoomsClicked()
 
     Invalidate();  // 화면 갱신
 }
+
 
 
 void CMainFrame::OnSettingsClicked()
@@ -312,23 +366,21 @@ void CMainFrame::OnPaint()
         break;
 
     case SCREEN_SETTINGS:
-        dc.TextOutW(120, 150, _T("프로필 사진"));
-        dc.TextOutW(120, 300, _T("사용자 이름"));
 
         // 회원정보 변경 버튼 생성
         if (!m_editProfileButton.GetSafeHwnd())
         {
-            m_editProfileButton.Create(_T("회원정보 변경"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(120, 350, 240, 380), this, IDC_BUTTON_EDIT);
+            m_editProfileButton.Create(_T("회원정보 변경"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(100, 200, 260, 250), this, IDC_BUTTON_EDIT);
         }
 
         if (m_logoutButton.GetSafeHwnd())
         {
-            m_logoutButton.MoveWindow(120, 385, 120, 30);
+            m_logoutButton.MoveWindow(100, 360, 160, 50);
         }
 
         if (!m_deleteAccountButton.GetSafeHwnd())
         {
-            m_deleteAccountButton.Create(_T("회원탈퇴"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(120, 420, 240, 450), this, IDC_BUTTON_WITHDRAW);
+            m_deleteAccountButton.Create(_T("회원탈퇴"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(100, 280, 260, 330), this, IDC_BUTTON_WITHDRAW);
         }
         break;
 
@@ -426,6 +478,47 @@ void CMainFrame::OnCreateChatRoomClicked()
     {
         if (!dlg.m_chatRoomName.IsEmpty())
         {
+            // 'user' 이름 제한 추가
+            if (dlg.m_chatRoomName.CompareNoCase(_T("user")) == 0)
+            {
+                AfxMessageBox(_T("user로는 채팅방을 생성할 수 없습니다."));
+                return;
+            }
+
+            // MySQL 연결
+            MYSQL Conn;
+            mysql_init(&Conn);
+            MYSQL* ConnPtr = mysql_real_connect(&Conn, MY_IP, DB_USER, DB_PASS, DB_NAME, 3306, NULL, 0);
+
+            if (!ConnPtr)
+            {
+                AfxMessageBox(_T("MySQL 연결 실패"));
+                return;
+            }
+
+            // 동일한 채팅방 이름이 이미 있는지 확인
+            CString checkQuery;
+            checkQuery.Format(_T("SHOW TABLES LIKE '%s'"), dlg.m_chatRoomName);
+
+            CT2A asciiCheckQuery(checkQuery); // CString to ASCII
+            if (mysql_query(ConnPtr, asciiCheckQuery))
+            {
+                CString errorMsg = CString(mysql_error(ConnPtr));
+                MessageBox(_T("쿼리 실행 실패: ") + errorMsg, _T("Error"), MB_ICONERROR);
+                mysql_close(ConnPtr);
+                return;
+            }
+
+            MYSQL_RES* res = mysql_store_result(ConnPtr);
+            if (res && mysql_num_rows(res) > 0) // 동일 이름의 테이블이 존재
+            {
+                AfxMessageBox(_T("이미 생성되어 있는 채팅방 이름입니다."));
+                mysql_free_result(res);
+                mysql_close(ConnPtr);
+                return;
+            }
+            mysql_free_result(res);
+
             // 채팅방 이름을 리스트 박스에 추가
             if (!m_chatRoomList.GetSafeHwnd())
             {
@@ -438,31 +531,24 @@ void CMainFrame::OnCreateChatRoomClicked()
             }
             m_chatRoomList.AddString(dlg.m_chatRoomName);  // 채팅방 이름 추가
 
-            // SQL 텍스트 템플릿
+            // 채팅방 테이블 생성
             CString query;
             query.Format(
                 _T("CREATE TABLE `%s` (name VARCHAR(100) NOT NULL, chat_time DATETIME DEFAULT CURRENT_TIMESTAMP, message TEXT NOT NULL)"),
                 dlg.m_chatRoomName);
 
             CT2A asciiQuery(query); // CString to ASCII
-            const char* queryChar = asciiQuery;
-            MYSQL Conn;
-            mysql_init(&Conn);
-            MYSQL* ConnPtr = mysql_real_connect(&Conn, MY_IP, DB_USER, DB_PASS, DB_NAME, 3306, (char*)NULL, 0);
-
-            if (ConnPtr)
+            if (mysql_query(ConnPtr, asciiQuery))
             {
-                int Stat = mysql_query(ConnPtr, queryChar);
-                if (Stat != 0)
-                {
-                    MessageBox(_T("쿼리 오류"), MB_OK);
-                }
-                mysql_close(ConnPtr); // MySQL 연결 닫기
+                MessageBox(_T("쿼리 실행 중 오류가 발생했습니다."), _T("Error"), MB_ICONERROR);
             }
             else
             {
-                MessageBox(_T("MySQL 연결 실패"), MB_OK);
+                AfxMessageBox(_T("채팅방이 성공적으로 생성되었습니다."));
             }
+
+            // MySQL 연결 닫기
+            mysql_close(ConnPtr);
         }
         else
         {
@@ -470,22 +556,81 @@ void CMainFrame::OnCreateChatRoomClicked()
         }
     }
 }
+
 
 void CMainFrame::OnJoinChatRoomClicked()
 {
     CChatRoomNameDlg d_join;
     CChatRoom dlg;
+
     if (d_join.DoModal() == IDOK)
     {
         if (!d_join.m_chatRoomName.IsEmpty())
         {
-            CString message;
-            message.Format(_T("채팅방 '%s'에 참여합니다."), d_join.m_chatRoomName);
-            AfxMessageBox(message);
-            // TODO: 채팅방 참여 로직 추가
-            chatname = d_join.m_chatRoomName;
-            dlg.DoModal();
+            // 'user' 이름 제한 추가
+            if (d_join.m_chatRoomName.CompareNoCase(_T("user")) == 0)
+            {
+                AfxMessageBox(_T("user 채팅방은 참여할 수 없습니다."));
+                return;
+            }
 
+            MYSQL Conn;
+            MYSQL* ConnPtr = mysql_init(&Conn);
+
+            if (!ConnPtr)
+            {
+                MessageBox(_T("MySQL 초기화 실패"), _T("Error"), MB_ICONERROR);
+                return;
+            }
+
+            ConnPtr = mysql_real_connect(&Conn, MY_IP, DB_USER, DB_PASS, DB_NAME, 3306, NULL, 0);
+            if (!ConnPtr)
+            {
+                CString errorMsg = CString(mysql_error(&Conn));
+                MessageBox(_T("MySQL 연결 실패: ") + errorMsg, _T("Error"), MB_ICONERROR);
+                return;
+            }
+
+            // 채팅방이 존재하는지 확인
+            CString query;
+            query.Format(_T("SHOW TABLES LIKE '%s'"), d_join.m_chatRoomName);
+
+            CT2A asciiQuery(query); // CString to ASCII
+            const char* queryChar = asciiQuery;
+
+            if (mysql_query(ConnPtr, queryChar) == 0)
+            {
+                MYSQL_RES* res = mysql_store_result(ConnPtr);
+
+                if (res)
+                {
+                    if (mysql_num_rows(res) > 0)
+                    {
+                        // 채팅방이 존재하는 경우
+                        CString message;
+                        message.Format(_T("채팅방 '%s'에 참여합니다."), d_join.m_chatRoomName);
+                        AfxMessageBox(message);
+
+                        // 채팅방 이름 저장 및 다이얼로그 실행
+                        chatname = d_join.m_chatRoomName;
+                        dlg.DoModal();
+                    }
+                    else
+                    {
+                        // 채팅방이 존재하지 않는 경우
+                        AfxMessageBox(_T("없는 채팅방입니다. 다시 선택해주세요."));
+                    }
+
+                    mysql_free_result(res);
+                }
+            }
+            else
+            {
+                CString errorMsg = CString(mysql_error(ConnPtr));
+                MessageBox(_T("쿼리 실행 실패: ") + errorMsg, _T("Error"), MB_ICONERROR);
+            }
+
+            mysql_close(ConnPtr);
         }
         else
         {
@@ -493,4 +638,6 @@ void CMainFrame::OnJoinChatRoomClicked()
         }
     }
 }
+
+
 

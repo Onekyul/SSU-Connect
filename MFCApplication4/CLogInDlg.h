@@ -31,4 +31,5 @@ public:
 	CString m_strId;
 	CString m_strPw;
 	CString m_strName;
+	afx_msg void OnClose();
 };
