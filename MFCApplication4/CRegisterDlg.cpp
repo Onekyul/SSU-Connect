@@ -76,8 +76,9 @@ void CRegisterDlg::OnBnClickedOk()
         m_StrRegi_id, m_StrRegi_pw, m_StrRegi_name
     );
 
-    CT2A asciiQuery(Query); // CString to ASCII
-    const char* queryChar = asciiQuery;
+    //CT2A asciiQuery(Query); // CString to ASCII
+    CW2A utfQuery(Query, CP_UTF8);
+    char* queryChar = utfQuery;
 
     int Stat = mysql_query(ConnPtr, queryChar);
     if (Stat != 0) {

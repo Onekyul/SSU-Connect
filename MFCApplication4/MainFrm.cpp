@@ -261,30 +261,29 @@ void CMainFrame::OnChatRoomsClicked()
     }
 
     // 테이블 목록 가져오기
-    if (mysql_query(ConnPtr, "SHOW TABLES") == 0)
-    {
+    // MySQL 쿼리 실행
+    if (mysql_query(ConnPtr, "SHOW TABLES") == 0) {
         MYSQL_RES* res = mysql_store_result(ConnPtr);
-        if (res)
-        {
+        if (res) {
             MYSQL_ROW row;
-            while ((row = mysql_fetch_row(res)) != NULL)
-            {
-                CString tableName(row[0]); // 첫 번째 컬럼이 테이블 이름
+            while ((row = mysql_fetch_row(res)) != NULL) {
+                // UTF-8 데이터를 CString으로 변환
+                CString tableName(CA2T(row[0], CP_UTF8)); // UTF-8 → CString 변환
 
                 // 'user' 테이블 제외 조건 추가
-                if (tableName.CompareNoCase(_T("user")) != 0)
-                {
+                if (tableName.CompareNoCase(_T("user")) != 0) {
                     m_chatRoomList.AddString(tableName); // 리스트 박스에 추가
                 }
             }
             mysql_free_result(res);
         }
     }
-    else
-    {
-        CString errorMsg = CString(mysql_error(ConnPtr));
+    else {
+        // UTF-8 에러 메시지 처리
+        CString errorMsg(CA2T(mysql_error(ConnPtr), CP_UTF8));
         MessageBox(_T("쿼리 실행 실패: ") + errorMsg, _T("Error"), MB_ICONERROR);
     }
+
 
     // MySQL 연결 닫기
     mysql_close(ConnPtr);
@@ -500,8 +499,10 @@ void CMainFrame::OnCreateChatRoomClicked()
             CString checkQuery;
             checkQuery.Format(_T("SHOW TABLES LIKE '%s'"), dlg.m_chatRoomName);
 
-            CT2A asciiCheckQuery(checkQuery); // CString to ASCII
-            if (mysql_query(ConnPtr, asciiCheckQuery))
+            //CT2A asciiQuery(Query); // CString to ASCII
+            CW2A utfQuery(checkQuery, CP_UTF8);
+            char* queryChar = utfQuery;
+            if (mysql_query(ConnPtr, queryChar))
             {
                 CString errorMsg = CString(mysql_error(ConnPtr));
                 MessageBox(_T("쿼리 실행 실패: ") + errorMsg, _T("Error"), MB_ICONERROR);
@@ -537,8 +538,12 @@ void CMainFrame::OnCreateChatRoomClicked()
                 _T("CREATE TABLE `%s` (name VARCHAR(100) NOT NULL, chat_time DATETIME DEFAULT CURRENT_TIMESTAMP, message TEXT NOT NULL)"),
                 dlg.m_chatRoomName);
 
-            CT2A asciiQuery(query); // CString to ASCII
-            if (mysql_query(ConnPtr, asciiQuery))
+            //CT2A asciiQuery(query); // CString to ASCII
+            //CT2A asciiQuery(Query); // CString to ASCII
+            CW2A utfQuery2(query, CP_UTF8);
+            char* queryChar2 = utfQuery2;
+
+            if (mysql_query(ConnPtr, queryChar2))
             {
                 MessageBox(_T("쿼리 실행 중 오류가 발생했습니다."), _T("Error"), MB_ICONERROR);
             }
@@ -595,8 +600,8 @@ void CMainFrame::OnJoinChatRoomClicked()
             CString query;
             query.Format(_T("SHOW TABLES LIKE '%s'"), d_join.m_chatRoomName);
 
-            CT2A asciiQuery(query); // CString to ASCII
-            const char* queryChar = asciiQuery;
+            CW2A utfQuery(query, CP_UTF8);
+            char* queryChar = utfQuery;
 
             if (mysql_query(ConnPtr, queryChar) == 0)
             {

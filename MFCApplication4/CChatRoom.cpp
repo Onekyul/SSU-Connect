@@ -135,8 +135,9 @@ LPARAM CChatRoom::OnReceive(WPARAM wParam, LPARAM lParam) {
         Query.Format(
             _T("INSERT INTO `%s` (name, message) VALUES ('%s', '%s')"),
             ChatDlg, Username, Textlog);
-        CT2A asciiQuery(Query); // CString to ASCII
-        char* queryChar = asciiQuery;
+        //CT2A asciiQuery(Query); // CString to ASCII
+        CW2A utfQuery(Query, CP_UTF8);
+        char* queryChar = utfQuery;
         InitList(queryChar, ChatDlg);
         m_rCount = -1;
     }
@@ -168,8 +169,9 @@ BOOL CChatRoom::OnInitDialog()
     CString query;
     query.Format(_T("SELECT * FROM `%s`"), chatnameDlg);
 
-    CT2A asciiQuery(query); // CString to ASCII
-    const char* queryChar = asciiQuery;
+    //CT2A asciiQuery(Query); // CString to ASCII
+    CW2A utfQuery(query, CP_UTF8);
+    char* queryChar = utfQuery;
 
     MYSQL Conn;
     mysql_init(&Conn);
@@ -268,8 +270,9 @@ void CChatRoom::OnBnClickedButtonSend()
     Query.Format(
         _T("INSERT INTO `%s` (name, message) VALUES ('%s', '%s')"),
         chatnameDlg, username, text);
-    CT2A asciiQuery(Query); // CString to ASCII
-    char* queryChar = asciiQuery;
+    //CT2A asciiQuery(Query); // CString to ASCII
+    CW2A utfQuery(Query, CP_UTF8);
+    char* queryChar = utfQuery;
     InitList(queryChar, chatnameDlg);
 
     CW2A strSendA(m_strSend, CP_UTF8);
