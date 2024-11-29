@@ -46,6 +46,7 @@ END_MESSAGE_MAP()
 
 LPARAM CChatRoom::OnReceive(WPARAM wParam, LPARAM lParam) {
 
+    // MainFrame으로 부터 값 가져오기
     CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
     CString chatnameDlg = pMainFrame->chatname;
 
@@ -53,8 +54,8 @@ LPARAM CChatRoom::OnReceive(WPARAM wParam, LPARAM lParam) {
     char pTmp[256];
     CString strTmp;
     memset(pTmp, '\0', sizeof(pTmp));
-
-    // 데이터를 소켓으로부터 수신
+     
+    // 데이터를 소켓으로부터 수신 후 UTF-8 형식으로 전환
     m_socCom.Receive(pTmp, sizeof(pTmp));
     strTmp = CString(CA2T(pTmp, CP_UTF8));
 
@@ -103,12 +104,14 @@ BOOL CChatRoom::OnInitDialog()
     CDialogEx::OnInitDialog();
 
     // TODO:  여기에 추가 초기화 작업을 추가합니다.
+    // 서버의 IP, port를 통해서 서버와 연결
     m_strIP = _T("192.168.213.117");
     UpdateData(TRUE);
     m_socCom.Create();
     m_socCom.Connect(m_strIP, 5000);
     m_socCom.Init(this->m_hWnd);
 
+    // MianFarme으로 부터 값을 가져오기
     CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
     CString username = pMainFrame->m_strUserName;
     CString chatnameDlg = pMainFrame->chatname;
@@ -134,14 +137,16 @@ BOOL CChatRoom::OnInitDialog()
 void CChatRoom::OnBnClickedButtonSend()
 {
     // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+    // MainFrame에서 값 받아오기
     CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
     CString username = pMainFrame->m_strUserName;
     CString chatnameDlg = pMainFrame->chatname;
+    
     UpdateData(TRUE);
     char pTmp[256];
     CString strTmp;
     CString text;
-    GetDlgItemText(IDC_EDIT_SEND, text);
+    GetDlgItemText(IDC_EDIT_SEND, text); // Edit로 부터 값 받아오기
     // 버퍼 초기화
     memset(pTmp, '\0', sizeof(pTmp));
     //닉네임과 채팅방 정보 추가
