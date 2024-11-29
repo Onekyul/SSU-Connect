@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "CSocCom.h"
+
 
 class CMainFrame : public CFrameWnd
 {
@@ -12,6 +14,8 @@ protected:
 public:
     CMainFrame() noexcept;
     virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+
+    CSocCom m_socCom;
 
 protected:
     // 툴바와 상태바
@@ -66,4 +70,5 @@ public:
     CString m_strUserPw;
     CString m_strUserName;
     CString chatname;
+    CString m_strIP;
 };

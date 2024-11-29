@@ -53,10 +53,10 @@ void CRegisterDlg::OnBnClickedOk()
     // ID 중복 확인 쿼리
     CString CheckQuery;
     CheckQuery.Format(_T("SELECT COUNT(*) FROM user WHERE user_id='%s'"), m_StrRegi_id);
-    CT2A asciiCheckQuery(CheckQuery);
-    const char* checkQueryChar = asciiCheckQuery;
+    CW2A utfQuery(CheckQuery, CP_UTF8);
+    char* queryChar = utfQuery;
 
-    if (mysql_query(ConnPtr, checkQueryChar) == 0) {
+    if (mysql_query(ConnPtr, utfQuery) == 0) {
         MYSQL_RES* res = mysql_store_result(ConnPtr);
         MYSQL_ROW row = mysql_fetch_row(res);
 
@@ -76,11 +76,10 @@ void CRegisterDlg::OnBnClickedOk()
         m_StrRegi_id, m_StrRegi_pw, m_StrRegi_name
     );
 
-    //CT2A asciiQuery(Query); // CString to ASCII
-    CW2A utfQuery(Query, CP_UTF8);
-    char* queryChar = utfQuery;
+    CW2A utfQuery2(Query, CP_UTF8);
+    char* queryChar2 = utfQuery2;
 
-    int Stat = mysql_query(ConnPtr, queryChar);
+    int Stat = mysql_query(ConnPtr, queryChar2);
     if (Stat != 0) {
         MessageBox(NULL, _T("쿼리 오류"), MB_OK);
     }

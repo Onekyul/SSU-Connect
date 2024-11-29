@@ -29,4 +29,3 @@ void CSocCom::OnReceive(int nErrorCode)
 
 	CSocket::OnReceive(nErrorCode);
 }
-

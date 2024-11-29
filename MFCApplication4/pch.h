@@ -12,7 +12,6 @@
 
 #pragma once
 #include <afxsock.h>
-#include "CSocServer.h"
 #include "CSocCom.h"
 
 #define UM_ACCEPT WM_USER+1
@@ -28,18 +27,12 @@
 //----------------------------------------------------------------------------
 
 //DB연결 초기화 관련헤더 ----------------------------------------------------
-#define MY_IP "localhost"
-#define DB_USER "root"
-#define DB_PASS "zyos0611^^"
+#define MY_IP "192.168.213.117"
+#define DB_USER "newuser2"
+#define DB_PASS "1q2w3e4r!"
 #define DB_NAME "Mydatabase"
 //-----------------------------------------------------------------------------
-#pragma once
-#include <afxsock.h>
-#include "CSocServer.h"
-#include "CSocCom.h"
 
-#define UM_ACCEPT WM_USER+1
-#define UM_RECEIVE WM_USER+2
 
 //-----------------------------------------------------------------------------
 #pragma comment( lib, "libmysql.lib" )

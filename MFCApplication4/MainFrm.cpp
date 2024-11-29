@@ -11,6 +11,7 @@
 #include "CChatRoomNameDlg.h"
 #include "CChatRoom.h"
 
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -55,6 +56,12 @@ CMainFrame::~CMainFrame()
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
+    m_strIP = _T("10.21.31.152");
+    UpdateData(TRUE);
+    m_socCom.Create();
+    m_socCom.Connect(m_strIP, 5000);
+    m_socCom.Init(this->m_hWnd);
+
     m_currentScreen = SCREEN_FRIENDS;
     if (CFrameWnd::OnCreate(lpCreateStruct) == -1)
         return -1;
@@ -113,9 +120,9 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
             MessageBox(_T("데이터베이스 연결 실패"));
         }
 
-        mysql_query(ConnPtr, "set session character_set_connection=euckr;");
-        mysql_query(ConnPtr, "set session character_set_results=euckr;");
-        mysql_query(ConnPtr, "set session character_set_client=euckr;");
+        mysql_query(ConnPtr, "set session character_set_connection=utf8;");
+        mysql_query(ConnPtr, "set session character_set_results=utf8;");
+        mysql_query(ConnPtr, "set session character_set_client=utf8;");
 
         char* Query = "SELECT user_name FROM user";
 
@@ -190,9 +197,9 @@ void CMainFrame::OnFriendsClicked()
             return;
         }
 
-        mysql_query(ConnPtr, "set session character_set_connection=euckr;");
-        mysql_query(ConnPtr, "set session character_set_results=euckr;");
-        mysql_query(ConnPtr, "set session character_set_client=euckr;");
+        mysql_query(ConnPtr, "set session character_set_connection=utf8;");
+        mysql_query(ConnPtr, "set session character_set_results=utf8;");
+        mysql_query(ConnPtr, "set session character_set_client=utf8;");
 
         char* Query = "SELECT user_name FROM user";
 
@@ -213,7 +220,9 @@ void CMainFrame::OnFriendsClicked()
         while ((Row = mysql_fetch_row(Result)) != NULL) {
             if (Row[0] != NULL) { // Row[0]이 NULL인지 확인
                 CString dbName(Row[0]); // 데이터베이스에서 이름 가져오기
-                m_friendsList.AddString(dbName); // 리스트박스에 이름 추가
+                    m_friendsList.AddString(dbName);
+               
+                // 리스트박스에 이름 추가
             }
         }
 
@@ -271,7 +280,7 @@ void CMainFrame::OnChatRoomsClicked()
                 CString tableName(CA2T(row[0], CP_UTF8)); // UTF-8 → CString 변환
 
                 // 'user' 테이블 제외 조건 추가
-                if (tableName.CompareNoCase(_T("user")) != 0) {
+                if (tableName.CompareNoCase(_T("user")) != 0 && tableName.CompareNoCase(_T("admin")) != 0) {
                     m_chatRoomList.AddString(tableName); // 리스트 박스에 추가
                 }
             }
@@ -478,9 +487,9 @@ void CMainFrame::OnCreateChatRoomClicked()
         if (!dlg.m_chatRoomName.IsEmpty())
         {
             // 'user' 이름 제한 추가
-            if (dlg.m_chatRoomName.CompareNoCase(_T("user")) == 0)
+            if (dlg.m_chatRoomName.CompareNoCase(_T("user")) == 0 || dlg.m_chatRoomName.CompareNoCase(_T("admin")))
             {
-                AfxMessageBox(_T("user로는 채팅방을 생성할 수 없습니다."));
+                AfxMessageBox(_T("해당 이름으로는 채팅방을 생성할 수 없습니다."));
                 return;
             }
 
@@ -538,11 +547,8 @@ void CMainFrame::OnCreateChatRoomClicked()
                 _T("CREATE TABLE `%s` (name VARCHAR(100) NOT NULL, chat_time DATETIME DEFAULT CURRENT_TIMESTAMP, message TEXT NOT NULL)"),
                 dlg.m_chatRoomName);
 
-            //CT2A asciiQuery(query); // CString to ASCII
-            //CT2A asciiQuery(Query); // CString to ASCII
             CW2A utfQuery2(query, CP_UTF8);
-            char* queryChar2 = utfQuery2;
-
+            char* queryChar2 = utfQuery;
             if (mysql_query(ConnPtr, queryChar2))
             {
                 MessageBox(_T("쿼리 실행 중 오류가 발생했습니다."), _T("Error"), MB_ICONERROR);
@@ -573,9 +579,9 @@ void CMainFrame::OnJoinChatRoomClicked()
         if (!d_join.m_chatRoomName.IsEmpty())
         {
             // 'user' 이름 제한 추가
-            if (d_join.m_chatRoomName.CompareNoCase(_T("user")) == 0)
+            if (d_join.m_chatRoomName.CompareNoCase(_T("user")) == 0 || d_join.m_chatRoomName.CompareNoCase(_T("admin")) == 0)
             {
-                AfxMessageBox(_T("user 채팅방은 참여할 수 없습니다."));
+                AfxMessageBox(_T("해당 채팅방은 참여할 수 없습니다."));
                 return;
             }
 

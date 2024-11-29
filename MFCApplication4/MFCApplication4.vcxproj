@@ -115,7 +115,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>"C:\Program Files\MySQL\MySQL Server 9.1\include"</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>"C:\Program Files\MySQL\MySQL Server 8.0\include"</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -193,7 +193,6 @@
     <ClInclude Include="CLogInDlg.h" />
     <ClInclude Include="CRegisterDlg.h" />
     <ClInclude Include="CSocCom.h" />
-    <ClInclude Include="CSocServer.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="MFCApplication4.h" />
@@ -211,7 +210,6 @@
     <ClCompile Include="CLogInDlg.cpp" />
     <ClCompile Include="CRegisterDlg.cpp" />
     <ClCompile Include="CSocCom.cpp" />
-    <ClCompile Include="CSocServer.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="MFCApplication4.cpp" />
     <ClCompile Include="MFCApplication4Doc.cpp" />

@@ -62,9 +62,9 @@ void CLogInDlg::OnClickedButtonLogin()
         return;
     }
 
-    mysql_query(ConnPtr, "set session character_set_connection=euckr;");
-    mysql_query(ConnPtr, "set session character_set_results=euckr;");
-    mysql_query(ConnPtr, "set session character_set_client=euckr;");
+    mysql_query(ConnPtr, "set session character_set_connection=utf8;");
+    mysql_query(ConnPtr, "set session character_set_results=utf8;");
+    mysql_query(ConnPtr, "set session character_set_client=utf8;");
 
     // 모든 사용자 정보를 가져오는 쿼리
     char* Query = "SELECT user_id, user_pw,user_name FROM user";
