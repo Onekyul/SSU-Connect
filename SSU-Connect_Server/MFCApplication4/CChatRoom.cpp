@@ -45,17 +45,20 @@ END_MESSAGE_MAP()
 
 LPARAM CChatRoom::OnAccept(WPARAM wParam, LPARAM lParam) {
     try {
+        // 통신을 보낸 클라이언트의 번호를 가져옴
         int tmp = m_socServer.m_index.front();
 
         CString number;
         number.Format(_T("%d"), tmp);
 
+        // 통신을 보낸 클라이언트의 소켓 생성
         m_socCom[tmp] = new CSocCom();
         m_socCom[tmp] = m_socServer.GetAcceptSocCom();
 
         m_socServer.m_index.pop_front();
         m_using.push_back(tmp);
 
+        // 클라이언트 소켓과 서버 소켓 연결
         m_socCom[tmp]->m_index = tmp;
         m_socCom[tmp]->Init(this->m_hWnd);
 
@@ -90,14 +93,12 @@ LPARAM CChatRoom::OnReceive(WPARAM wParam, LPARAM lParam) {
     int secondPipe = strTmp.Find(_T("|"), firstPipe + 1); // 두 번째 '|' 위치
     int thirdPipe = strTmp.Find(_T("|"), secondPipe + 1); // 세 번째 '|' 위치
     int fourthPipe = strTmp.Find(_T("|"), thirdPipe + 1); // 네 번째 '|' 위치
-    int fifthPipe = strTmp.Find(_T("|"), fourthPipe + 1); // 다섯 번째 '|' 위치
 
     // 파이프를 기준으로 값 구분
     CString firstValue = strTmp.Left(firstPipe).Trim();
     CString secondValue = strTmp.Mid(firstPipe + 1, secondPipe - firstPipe - 1).Trim();
     CString thirdValue = strTmp.Mid(secondPipe + 1, thirdPipe - secondPipe - 1).Trim();
     CString fourthValue = strTmp.Mid(thirdPipe + 1, fourthPipe - thirdPipe - 1).Trim();
-    CString fifthValue = strTmp.Mid(fourthPipe + 1).Trim();
     CString fifthValue = strTmp.Mid(fourthPipe + 1).Trim();
 
     // switch문에 사용하기 위해 int형으로 형 변환

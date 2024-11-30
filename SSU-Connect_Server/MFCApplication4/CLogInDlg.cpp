@@ -45,7 +45,7 @@ END_MESSAGE_MAP()
 
 void CLogInDlg::OnClickedButtonLogin()
 {
-    // DB와 확인 후 맞으면 OK 아니면 아닙니다 모달 출력
+    // DB 연결 준비
     MYSQL Conn;
     MYSQL* ConnPtr = NULL;
     MYSQL_RES* Result;
@@ -54,6 +54,7 @@ void CLogInDlg::OnClickedButtonLogin()
     GetDlgItemText(IDC_EDIT_ID, m_strId);
     GetDlgItemText(IDC_EDIT_PW, m_strPw);
 
+    //DB 연결
     mysql_init(&Conn);
     ConnPtr = mysql_real_connect(&Conn, MY_IP, DB_USER, DB_PASS, DB_NAME, 3306, (char*)NULL, 0);
 
@@ -62,6 +63,7 @@ void CLogInDlg::OnClickedButtonLogin()
         return;
     }
 
+    // DB set을 UTF-8로 설정
     mysql_query(ConnPtr, "set session character_set_connection=euckr;");
     mysql_query(ConnPtr, "set session character_set_results=euckr;");
     mysql_query(ConnPtr, "set session character_set_client=euckr;");
@@ -69,11 +71,13 @@ void CLogInDlg::OnClickedButtonLogin()
     // 모든 사용자 정보를 가져오는 쿼리
     char* Query = "SELECT user_id, user_pw,user_name FROM user";
 
+    // 쿼리 오류 시
     if (mysql_query(ConnPtr, Query)) {
         TRACE("쿼리 실행 실패: %s\n", mysql_error(ConnPtr));
         return;
     }
 
+    // 쿼리 결과가 없을 경우
     Result = mysql_store_result(ConnPtr);
     if (Result == NULL) {
         TRACE(_T("내용 없음\n"));

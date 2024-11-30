@@ -38,14 +38,17 @@ END_MESSAGE_MAP()
 
 void CRegisterDlg::OnBnClickedOk()
 {
+    // DB 연결 준비
     CString m_StrRegi_name;
     CString m_StrRegi_id;
     CString m_StrRegi_pw;
 
+    // 각각의 Edit에서 이름, id, pw 가져오기
     GetDlgItemText(IDC_EDIT_REGI_NAME, m_StrRegi_name);
     GetDlgItemText(IDC_EDIT_REGI_ID, m_StrRegi_id);
     GetDlgItemText(IDC_EDIT_REGI_PW, m_StrRegi_pw);
 
+    // DB 연결
     MYSQL Conn;
     mysql_init(&Conn);
     MYSQL* ConnPtr = mysql_real_connect(&Conn, MY_IP, DB_USER, DB_PASS, DB_NAME, 3306, (char*)NULL, 0);
@@ -60,6 +63,7 @@ void CRegisterDlg::OnBnClickedOk()
         MYSQL_RES* res = mysql_store_result(ConnPtr);
         MYSQL_ROW row = mysql_fetch_row(res);
 
+        // id가 같을 경우
         if (row && atoi(row[0]) > 0) {
             MessageBox(_T("이미 사용중인 아이디입니다."), _T("오류"));
             mysql_free_result(res);
@@ -80,6 +84,7 @@ void CRegisterDlg::OnBnClickedOk()
     CW2A utfQuery(Query, CP_UTF8);
     char* queryChar = utfQuery;
 
+    // 쿼리 오류 시
     int Stat = mysql_query(ConnPtr, queryChar);
     if (Stat != 0) {
         MessageBox(NULL, _T("쿼리 오류"), MB_OK);

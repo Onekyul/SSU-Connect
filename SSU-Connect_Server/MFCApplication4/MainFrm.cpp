@@ -55,6 +55,7 @@ CMainFrame::~CMainFrame()
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
+    // 초기 화면을 친구창으로 설정
     m_currentScreen = SCREEN_FRIENDS;
     if (CFrameWnd::OnCreate(lpCreateStruct) == -1)
         return -1;
@@ -101,24 +102,30 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
             WS_CHILD | WS_VISIBLE | LBS_STANDARD,
             CRect(10, 80, 380, 400), this, IDC_LIST_FRIENDS);
 
+        // DB 연결 준비
         MYSQL Conn;
         MYSQL* ConnPtr = NULL;
         MYSQL_RES* Result;
         MYSQL_ROW Row;
 
+        // DB 연결
         mysql_init(&Conn);
         ConnPtr = mysql_real_connect(&Conn, MY_IP, DB_USER, DB_PASS, DB_NAME, 3306, (char*)NULL, 0);
 
+        // DB 연결 오류 시
         if (ConnPtr == NULL) {
             MessageBox(_T("데이터베이스 연결 실패"));
         }
 
+        // DB set을 UTF-8로 설정
         mysql_query(ConnPtr, "set session character_set_connection=euckr;");
         mysql_query(ConnPtr, "set session character_set_results=euckr;");
         mysql_query(ConnPtr, "set session character_set_client=euckr;");
 
+        // user table로 부터 전체 user_name을 들고 오는 쿼리
         char* Query = "SELECT user_name FROM user";
 
+        // 쿼리 오류 시
         if (mysql_query(ConnPtr, Query)) {
             TRACE("쿼리 실행 실패: %s\n", mysql_error(ConnPtr));
             mysql_close(ConnPtr); // 연결 해제
@@ -131,6 +138,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
             mysql_close(ConnPtr); // 연결 해제
         }
 
+        // Result로 부터 한 줄씩 리스트 박스에 저장
         while ((Row = mysql_fetch_row(Result)) != NULL) {
             if (Row[0] != NULL) { // Row[0]이 NULL인지 확인
                 CString dbName(Row[0]); // 데이터베이스에서 이름 가져오기
@@ -158,14 +166,17 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 }
 
 // 각 버튼 클릭 이벤트 핸들러
+// 로그아웃 버튼 핸들러 함수
 void CMainFrame::OnLogoutClicked()
 {
     AfxMessageBox(_T("로그아웃 되었습니다."));
     DestroyWindow();
 }
 
+// 친구창 버튼 핸들러 함수
 void CMainFrame::OnFriendsClicked()
 {
+    // 화면을 친구창 화면으로 변경
     m_currentScreen = SCREEN_FRIENDS;
     RemoveViews();
 
@@ -177,25 +188,31 @@ void CMainFrame::OnFriendsClicked()
             WS_CHILD | WS_VISIBLE | LBS_STANDARD,
             CRect(10, 80, 380, 400), this, IDC_LIST_FRIENDS);
 
+        // DB 연결 준비
         MYSQL Conn;
         MYSQL* ConnPtr = NULL;
         MYSQL_RES* Result;
         MYSQL_ROW Row;
 
+        // DB 연결
         mysql_init(&Conn);
         ConnPtr = mysql_real_connect(&Conn, MY_IP, DB_USER, DB_PASS, DB_NAME, 3306, (char*)NULL, 0);
 
+        // DB 연결 실패
         if (ConnPtr == NULL) {
             MessageBox(_T("데이터베이스 연결 실패"));
             return;
         }
 
+        // DB set을 UTF-8로 설정
         mysql_query(ConnPtr, "set session character_set_connection=euckr;");
         mysql_query(ConnPtr, "set session character_set_results=euckr;");
         mysql_query(ConnPtr, "set session character_set_client=euckr;");
 
+        // user table로 부터 전체 user_name을 들고 오는 쿼리
         char* Query = "SELECT user_name FROM user";
 
+        // 쿼리 실패 시
         if (mysql_query(ConnPtr, Query)) {
             TRACE("쿼리 실행 실패: %s\n", mysql_error(ConnPtr));
             mysql_close(ConnPtr); // 연결 해제
@@ -210,6 +227,7 @@ void CMainFrame::OnFriendsClicked()
             return;
         }
 
+        // Result로 부터 한 줄씩 리스트 박스에 저장 
         while ((Row = mysql_fetch_row(Result)) != NULL) {
             if (Row[0] != NULL) { // Row[0]이 NULL인지 확인
                 CString dbName(Row[0]); // 데이터베이스에서 이름 가져오기
@@ -243,7 +261,7 @@ void CMainFrame::OnChatRoomsClicked()
         m_chatRoomList.ResetContent(); // 기존 내용을 초기화
     }
 
-    // MySQL 연결
+    // MySQL 연결 준비
     MYSQL Conn;
     MYSQL* ConnPtr = mysql_init(&Conn);
     if (!ConnPtr)
@@ -252,6 +270,7 @@ void CMainFrame::OnChatRoomsClicked()
         return;
     }
 
+    // DB 연결
     ConnPtr = mysql_real_connect(&Conn, MY_IP, DB_USER, DB_PASS, DB_NAME, 3306, NULL, 0);
     if (!ConnPtr)
     {
@@ -295,26 +314,32 @@ void CMainFrame::OnChatRoomsClicked()
 }
 
 
-
+// 설정 버튼 핸들러 함수
 void CMainFrame::OnSettingsClicked()
 {
+    // 설정 화면으로 전환
     m_currentScreen = SCREEN_SETTINGS;
     RemoveViews();
     Invalidate();
 
 }
+
+// 회원정보 변경 버튼 핸들러 함수
 void CMainFrame::OnEditProfileClicked() {
     CChangeDlg ChangePW;
 
+    // 비밀번호 확인 모달창 띄우기
     if (ChangePW.DoModal() == IDOK) {
 
     }
 
 }
 
+// 회원탈퇴 버튼 핸들러 함수
 void CMainFrame::OnDeleteAccountClicked() {
     CCheckDlg CheckPW;
 
+    // 비밀번호 확인 모달창 띄우기
     if (CheckPW.DoModal() == IDOK) {
         DestroyWindow();
     }
@@ -326,20 +351,23 @@ void CMainFrame::OnPaint()
 {
     CPaintDC dc(this); // 그리기 장치를 위한 DC
 
+    // 화면 라인 생성
     dc.MoveTo(0, 30);
     dc.LineTo(400, 30);
 
     dc.MoveTo(0, 500);
     dc.LineTo(400, 500);
     dc.TextOutW(110, 10, m_strUserName);
+
+    // 현재 화면에 따른 화면 처리
     switch (m_currentScreen)
     {
-    case SCREEN_FRIENDS:
-        //m_chatRoomList.Create(WS_CHILD | WS_VISIBLE | LBS_STANDARD, CRect(10, 80, 380, 400), this, IDC_STATIC);
+    case SCREEN_FRIENDS: // 친구 창
+        
         break;
 
-    case SCREEN_CHATROOMS:
-        //m_chatRoomList.Create(WS_CHILD | WS_VISIBLE | LBS_STANDARD, CRect(10, 80, 380, 400), this, IDC_STATIC);
+    case SCREEN_CHATROOMS: // 채팅 방
+        
 
         // "채팅방 만들기" 버튼 생성
         if (!m_createChatRoomButton.GetSafeHwnd())
@@ -364,19 +392,19 @@ void CMainFrame::OnPaint()
         }
         break;
 
-    case SCREEN_SETTINGS:
+    case SCREEN_SETTINGS: // 설정창
 
         // 회원정보 변경 버튼 생성
         if (!m_editProfileButton.GetSafeHwnd())
         {
             m_editProfileButton.Create(_T("회원정보 변경"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(100, 200, 260, 250), this, IDC_BUTTON_EDIT);
         }
-
+        // 설정창 전환 시, 로그아웃 버튼 위치 변경
         if (m_logoutButton.GetSafeHwnd())
         {
             m_logoutButton.MoveWindow(100, 360, 160, 50);
         }
-
+        // 회원 탈퇴 버튼 생성
         if (!m_deleteAccountButton.GetSafeHwnd())
         {
             m_deleteAccountButton.Create(_T("회원탈퇴"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(100, 280, 260, 330), this, IDC_BUTTON_WITHDRAW);
@@ -384,17 +412,17 @@ void CMainFrame::OnPaint()
         break;
 
     default:
-        dc.TextOutW(100, 100, _T("기본 화면"));
+        
         break;
     }
 }
 
 
 
-
+// 화면 변경 시 화면 초기화
 void CMainFrame::RemoveViews()
 {
-    if (m_currentScreen != SCREEN_SETTINGS) {
+    if (m_currentScreen != SCREEN_SETTINGS) { // 설장창 화면이 아닐 시 로그아웃 버튼 위치 설정
         m_logoutButton.MoveWindow(280, 5, 100, 20);
     }
     if (m_currentScreen != SCREEN_FRIENDS) {
@@ -414,27 +442,21 @@ void CMainFrame::RemoveViews()
     }
     if (m_joinChatRoomButton.GetSafeHwnd())
     {
-        m_joinChatRoomButton.DestroyWindow();
+        m_joinChatRoomButton.DestroyWindow(); // 채팅방 참여 버튼 클릭 시 창 제거
     }
     if (m_createChatRoomButton.GetSafeHwnd()) {
-        m_createChatRoomButton.DestroyWindow();
+        m_createChatRoomButton.DestroyWindow(); // 채팅방 생성 버튼 클릭 시 창 제거
     }
 }
 
-
+// 프로그램 실행 시 로그인 창 생성
 void CMainFrame::OnShowWindow(BOOL bShow, UINT nStatus)
 {
     CFrameWnd::OnShowWindow(bShow, nStatus);
 
     // TODO: 여기에 메시지 처리기 코드를 추가합니다.
 
-    MYSQL Conn;
-    MYSQL* ConnPtr = NULL;
-
-    int Stat;
-
-
-
+    
     if (bShow)  // 창이 처음 보일 때만 실행
     {
         static bool isDialogShown = false;
@@ -442,6 +464,7 @@ void CMainFrame::OnShowWindow(BOOL bShow, UINT nStatus)
         {
             isDialogShown = true;
             CLogInDlg login;
+            // 로그인 모달 창 생성 후 로그인 성공 시 정보 저장
             if (login.DoModal() == IDOK && m_bLogIn)
             {
                 SetUserInfo(login.m_strId, login.m_strPw, login.m_strName);
@@ -452,6 +475,7 @@ void CMainFrame::OnShowWindow(BOOL bShow, UINT nStatus)
 }
 
 
+// 프로그램 크기 고정
 void CMainFrame::OnSize(UINT nType, int cx, int cy)
 {
     CFrameWnd::OnSize(nType, cx, cy);
@@ -463,6 +487,7 @@ void CMainFrame::OnSize(UINT nType, int cx, int cy)
 }
 
 
+// 회원 정보 저장
 void CMainFrame::SetUserInfo(CString Id, CString Pw, CString Name)
 {
     m_strUserId = Id;
@@ -470,14 +495,16 @@ void CMainFrame::SetUserInfo(CString Id, CString Pw, CString Name)
     m_strUserName = Name;
     // TODO: 여기에 구현 코드 추가.
 }
+
+// 채팅방 생성 버튼 핸들러 함수
 void CMainFrame::OnCreateChatRoomClicked()
 {
     CChatRoomNameDlg dlg;
-    if (dlg.DoModal() == IDOK)
+    if (dlg.DoModal() == IDOK) // 채팅방 이름 적는 모달 창
     {
-        if (!dlg.m_chatRoomName.IsEmpty())
+        if (!dlg.m_chatRoomName.IsEmpty()) // 채팅방 이름 입력 시
         {
-            // 'user' 이름 제한 추가
+            // 'user' 이름 제한 추가 (user table이 이미 존재)
             if (dlg.m_chatRoomName.CompareNoCase(_T("user")) == 0)
             {
                 AfxMessageBox(_T("user로는 채팅방을 생성할 수 없습니다."));
@@ -489,6 +516,7 @@ void CMainFrame::OnCreateChatRoomClicked()
             mysql_init(&Conn);
             MYSQL* ConnPtr = mysql_real_connect(&Conn, MY_IP, DB_USER, DB_PASS, DB_NAME, 3306, NULL, 0);
 
+            // DB 연결 실패 시
             if (!ConnPtr)
             {
                 AfxMessageBox(_T("MySQL 연결 실패"));
@@ -499,9 +527,9 @@ void CMainFrame::OnCreateChatRoomClicked()
             CString checkQuery;
             checkQuery.Format(_T("SHOW TABLES LIKE '%s'"), dlg.m_chatRoomName);
 
-            //CT2A asciiQuery(Query); // CString to ASCII
             CW2A utfQuery(checkQuery, CP_UTF8);
             char* queryChar = utfQuery;
+            // 쿼리 오류 시
             if (mysql_query(ConnPtr, queryChar))
             {
                 CString errorMsg = CString(mysql_error(ConnPtr));
@@ -538,15 +566,16 @@ void CMainFrame::OnCreateChatRoomClicked()
                 _T("CREATE TABLE `%s` (name VARCHAR(100) NOT NULL, chat_time DATETIME DEFAULT CURRENT_TIMESTAMP, message TEXT NOT NULL)"),
                 dlg.m_chatRoomName);
 
-            //CT2A asciiQuery(query); // CString to ASCII
-            //CT2A asciiQuery(Query); // CString to ASCII
+            // 쿼리 문 UTF-8 형식으로 변환
             CW2A utfQuery2(query, CP_UTF8);
             char* queryChar2 = utfQuery2;
 
+            // 쿼리 오류
             if (mysql_query(ConnPtr, queryChar2))
             {
                 MessageBox(_T("쿼리 실행 중 오류가 발생했습니다."), _T("Error"), MB_ICONERROR);
             }
+            // 채팅방 생성 성공
             else
             {
                 AfxMessageBox(_T("채팅방이 성공적으로 생성되었습니다."));
@@ -555,6 +584,7 @@ void CMainFrame::OnCreateChatRoomClicked()
             // MySQL 연결 닫기
             mysql_close(ConnPtr);
         }
+        // 채팅방 이름이 비어있을 경우
         else
         {
             AfxMessageBox(_T("채팅방 이름을 입력해주세요."));
@@ -563,6 +593,7 @@ void CMainFrame::OnCreateChatRoomClicked()
 }
 
 
+// 채팅방 참여 버튼 핸들러 함수
 void CMainFrame::OnJoinChatRoomClicked()
 {
     CChatRoomNameDlg d_join;
@@ -570,7 +601,7 @@ void CMainFrame::OnJoinChatRoomClicked()
 
     if (d_join.DoModal() == IDOK)
     {
-        if (!d_join.m_chatRoomName.IsEmpty())
+        if (!d_join.m_chatRoomName.IsEmpty()) // 채팅방 이름이 있는 경우
         {
             // 'user' 이름 제한 추가
             if (d_join.m_chatRoomName.CompareNoCase(_T("user")) == 0)
@@ -579,6 +610,7 @@ void CMainFrame::OnJoinChatRoomClicked()
                 return;
             }
 
+            // DB 연결 준비
             MYSQL Conn;
             MYSQL* ConnPtr = mysql_init(&Conn);
 
@@ -588,6 +620,7 @@ void CMainFrame::OnJoinChatRoomClicked()
                 return;
             }
 
+            // DB 연결
             ConnPtr = mysql_real_connect(&Conn, MY_IP, DB_USER, DB_PASS, DB_NAME, 3306, NULL, 0);
             if (!ConnPtr)
             {
@@ -600,9 +633,11 @@ void CMainFrame::OnJoinChatRoomClicked()
             CString query;
             query.Format(_T("SHOW TABLES LIKE '%s'"), d_join.m_chatRoomName);
 
+            // 쿼리문 UTF-8 형식으로 변경
             CW2A utfQuery(query, CP_UTF8);
             char* queryChar = utfQuery;
 
+            // DB에 채팅방 table이 존재하는 지 확인
             if (mysql_query(ConnPtr, queryChar) == 0)
             {
                 MYSQL_RES* res = mysql_store_result(ConnPtr);
@@ -631,6 +666,7 @@ void CMainFrame::OnJoinChatRoomClicked()
             }
             else
             {
+                // 쿼리 오류 시
                 CString errorMsg = CString(mysql_error(ConnPtr));
                 MessageBox(_T("쿼리 실행 실패: ") + errorMsg, _T("Error"), MB_ICONERROR);
             }
@@ -639,6 +675,7 @@ void CMainFrame::OnJoinChatRoomClicked()
         }
         else
         {
+            // 채팅방 이름이 비어 있을 경우
             AfxMessageBox(_T("채팅방 이름을 입력해주세요."));
         }
     }

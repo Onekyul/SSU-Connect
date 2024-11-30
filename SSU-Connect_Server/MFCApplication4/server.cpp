@@ -10,20 +10,20 @@
 #define PORT 5000
 #define BUFFER_SIZE 256
 
-std::vector<SOCKET> clients; // Å¬¶óÀÌ¾ðÆ® ¼ÒÄÏ ÀúÀå
+std::vector<SOCKET> clients; // Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 
-// Å¬¶óÀÌ¾ðÆ® ¸Þ½ÃÁö¸¦ ºê·ÎµåÄ³½ºÆ®
+// Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® ï¿½Þ½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Îµï¿½Ä³ï¿½ï¿½Æ®
 void broadcastMessage(const char* message, SOCKET sender) {
 
     for (SOCKET client : clients) {
-        if (client != sender) { // ÀÚ±â ÀÚ½Å¿¡°Ô´Â ¸Þ½ÃÁö Àü¼Û ¾È ÇÔ
+        if (client != sender) { // ï¿½Ú±ï¿½ ï¿½Ú½Å¿ï¿½ï¿½Ô´ï¿½ ï¿½Þ½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½
             send(client, message, strlen(message), 0);
         }
     }
 }
 
-// Å¬¶óÀÌ¾ðÆ® Ã³¸® ÇÔ¼ö
+// Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® Ã³ï¿½ï¿½ ï¿½Ô¼ï¿½
 void handleClient(SOCKET clientSocket) {
     char buffer[BUFFER_SIZE];
     while (true) {
@@ -31,64 +31,64 @@ void handleClient(SOCKET clientSocket) {
         int bytesReceived = recv(clientSocket, buffer, BUFFER_SIZE - 1, 0);
 
         if (bytesReceived <= 0) {
-            std::cerr << "Å¬¶óÀÌ¾ðÆ® ¿¬°á Á¾·á.\n";
+            std::cerr << "Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.\n";
             closesocket(clientSocket);
 
-            // Å¬¶óÀÌ¾ðÆ® ¸ñ·Ï¿¡¼­ Á¦°Å
+            // Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
             clients.erase(std::remove(clients.begin(), clients.end(), clientSocket), clients.end());
             break;
         }
 
-        std::cout << "¹ÞÀº ¸Þ½ÃÁö: " << buffer << std::endl;
+        std::cout << "ï¿½ï¿½ï¿½ï¿½ ï¿½Þ½ï¿½ï¿½ï¿½: " << buffer << std::endl;
 
-        // ¹ÞÀº ¸Þ½ÃÁö¸¦ ´Ù¸¥ Å¬¶óÀÌ¾ðÆ®¿¡°Ô ºê·ÎµåÄ³½ºÆ®
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Þ½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¸ï¿½ Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Îµï¿½Ä³ï¿½ï¿½Æ®
         broadcastMessage(buffer, clientSocket);
     }
 }
 
-// ¸ÞÀÎ ¼­¹ö ÇÔ¼ö
+// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
 int main() {
     WSADATA wsaData;
     SOCKET serverSocket;
     SOCKADDR_IN serverAddr;
 
-    // WinSock ÃÊ±âÈ­
+    // WinSock ï¿½Ê±ï¿½È­
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
-        std::cerr << "WSAStartup ½ÇÆÐ\n";
+        std::cerr << "WSAStartup ï¿½ï¿½ï¿½ï¿½\n";
         return 1;
     }
 
-    // ¼­¹ö ¼ÒÄÏ »ý¼º
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (serverSocket == INVALID_SOCKET) {
-        std::cerr << "¼ÒÄÏ »ý¼º ½ÇÆÐ\n";
+        std::cerr << "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½\n";
         WSACleanup();
         return 1;
     }
 
-    // ¼­¹ö ÁÖ¼Ò ¼³Á¤
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½ ï¿½ï¿½ï¿½ï¿½
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_addr.s_addr = INADDR_ANY;
     serverAddr.sin_port = htons(PORT);
 
-    // ¼ÒÄÏ ¹ÙÀÎµù
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Îµï¿½
     if (bind(serverSocket, (SOCKADDR*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR) {
-        std::cerr << "¹ÙÀÎµù ½ÇÆÐ\n";
+        std::cerr << "ï¿½ï¿½ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½\n";
         closesocket(serverSocket);
         WSACleanup();
         return 1;
     }
 
-    // ¸®½º´× ½ÃÀÛ
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     if (listen(serverSocket, SOMAXCONN) == SOCKET_ERROR) {
-        std::cerr << "¸®½º´× ½ÇÆÐ\n";
+        std::cerr << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½\n";
         closesocket(serverSocket);
         WSACleanup();
         return 1;
     }
 
-    std::cout << "¼­¹ö°¡ Æ÷Æ® " << PORT << "¿¡¼­ ½ÃÀÛµÇ¾ú½À´Ï´Ù.\n";
+    std::cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ® " << PORT << "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ÛµÇ¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.\n";
 
     while (true) {
         SOCKADDR_IN clientAddr;
@@ -96,22 +96,22 @@ int main() {
         SOCKET clientSocket = accept(serverSocket, (SOCKADDR*)&clientAddr, &clientAddrSize);
 
         if (clientSocket == INVALID_SOCKET) {
-            std::cerr << "Å¬¶óÀÌ¾ðÆ® ¿¬°á ½ÇÆÐ\n";
+            std::cerr << "Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½\n";
             continue;
         }
 
-        // Å¬¶óÀÌ¾ðÆ® ¸ñ·Ï¿¡ Ãß°¡
+        // Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® ï¿½ï¿½Ï¿ï¿½ ï¿½ß°ï¿½
         {
 
             clients.push_back(clientSocket);
         }
 
-        // Å¬¶óÀÌ¾ðÆ® Ã³¸® ½º·¹µå ½ÃÀÛ
+        // Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         std::thread clientThread(handleClient, clientSocket);
         clientThread.detach();
     }
 
-    // ¼­¹ö ¼ÒÄÏ ´Ý±â
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ý±ï¿½
     closesocket(serverSocket);
     WSACleanup();
     return 0;
