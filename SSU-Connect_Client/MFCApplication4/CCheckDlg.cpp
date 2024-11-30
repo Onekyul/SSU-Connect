@@ -55,7 +55,7 @@ void CCheckDlg::OnBnClickedOk()
         if (AfxMessageBox(_T("정말 회원탈퇴하시겠습니까?"), MB_YESNO) == IDYES) {
             CString query;
             //user테이블에서 현재 사용자의 아이디와 비밀번호가 들어가 있는 행(record)를 찾아 제거함.
-            query.Format(_T("DELETE FROM user WHERE user_id='%s' AND user_pw='%s'"), pMainFrame->m_strUserId, pMainFrame->m_strUserPw);
+            query.Format(_T("DELETE FROM user WHERE user_id='%s' AND user_pw='%s'"), m_strId, m_strPw);
 
             //Query문을 MYSQL에서 인식을 시키기 위해서 ASCII문자열로 변경
             CT2A asciiQuery(query);

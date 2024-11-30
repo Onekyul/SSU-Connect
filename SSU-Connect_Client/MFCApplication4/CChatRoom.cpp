@@ -64,7 +64,6 @@ LPARAM CChatRoom::OnReceive(WPARAM wParam, LPARAM lParam) {
     int secondPipe = strTmp.Find(_T("|"), firstPipe + 1); // 두 번째 '|' 위치
     int thirdPipe = strTmp.Find(_T("|"), secondPipe + 1); // 세 번째 '|' 위치
     int fourthPipe = strTmp.Find(_T("|"), thirdPipe + 1); // 네 번째 '|' 위치
-    int fifthPipe = strTmp.Find(_T("|"), fourthPipe + 1); // 다섯 번째 '|' 위치
 
     // 파이프를 기준으로 값 구분
     CString firstValue = strTmp.Left(firstPipe).Trim();
@@ -113,7 +112,7 @@ BOOL CChatRoom::OnInitDialog()
     CString chatnameDlg = pMainFrame->chatname;
     
     UpdateData(TRUE);
-    char pTmp[256]; //소켓에서 값을 읽어오기 위한 버퍼
+    char pTmp[256]; //소켓으로 값을 전송하기 위한 버퍼
     // 버퍼 초기화
     memset(pTmp, '\0', sizeof(pTmp));
     CString strTmp;
@@ -142,7 +141,7 @@ void CChatRoom::OnBnClickedButtonSend()
     CString chatnameDlg = pMainFrame->chatname;
     
     UpdateData(TRUE);
-    // 소켓에서 값을 읽어오기 위한 버퍼
+    // 소켓으로 값을 전송하기 위한 버퍼
     char pTmp[256];
     CString strTmp;
     CString text;

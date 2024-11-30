@@ -228,7 +228,7 @@ void CChatRoom::OnBnClickedButtonSend()
     CString chatnameDlg = pMainFrame->chatname;
     CString text;
     GetDlgItemText(IDC_EDIT_SEND, text);
-    char pTmp[256]; //소켓에서 값을 읽어오기 위한 버퍼
+    char pTmp[256]; //소켓으로 값을 전송하기 위한 버퍼
     UpdateData(TRUE);
     //수신한 내용을 DB에 INSERT
     CString Query;
@@ -351,7 +351,7 @@ void CChatRoom::case0(CString secondValue, CString thirdValue, CString fourthVal
     CString name = thirdValue;   // 두 번째 값
     CString strTmp = fourthValue; // 세 번째 값
 
-    //소켓에서 값을 읽어오기 위한 버퍼
+    //소켓으로 값을 전송하기 위한 버퍼
     char pTmp[256];
     // 버퍼 초기화
     memset(pTmp, '\0', sizeof(pTmp));
@@ -454,7 +454,7 @@ void CChatRoom::case0(CString secondValue, CString thirdValue, CString fourthVal
 void CChatRoom::case1(CString secondValue, WPARAM wParam)
 {
     // TODO: 여기에 구현 코드 추가.
-    char pTmp[256];//소켓에서 값을 읽어오기 위한 버퍼
+    char pTmp[256];//소켓으로 값을 전송하기 위한 버퍼
     
     // 버퍼 초기화
     memset(pTmp, '\0', sizeof(pTmp));

@@ -38,7 +38,7 @@ END_MESSAGE_MAP()
 
 void CRegisterDlg::OnBnClickedOk()
 {
-    // DB 연결 준비
+   
     CString m_StrRegi_name;
     CString m_StrRegi_id;
     CString m_StrRegi_pw;

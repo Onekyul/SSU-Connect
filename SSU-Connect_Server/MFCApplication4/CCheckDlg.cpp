@@ -49,7 +49,7 @@ void CCheckDlg::OnBnClickedOk()
 	if (m_strCkpw == m_strPw) {
 		if (AfxMessageBox(_T("정말 회원탈퇴하시겠습니까?"), MB_YESNO) == IDYES) {
 			CString query;
-			query.Format(_T("DELETE FROM user WHERE user_id='%s' AND user_pw='%s'"), pMainFrame->m_strUserId, pMainFrame->m_strUserPw);
+			query.Format(_T("DELETE FROM user WHERE user_id='%s' AND user_pw='%s'"), m_strId, m_strPw);
 
 			CT2A asciiQuery(query); // CString to ASCII
 			const char* queryChar = asciiQuery;
