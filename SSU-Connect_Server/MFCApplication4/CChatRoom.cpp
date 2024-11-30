@@ -59,11 +59,6 @@ LPARAM CChatRoom::OnAccept(WPARAM wParam, LPARAM lParam) {
         m_socCom[tmp]->m_index = tmp;
         m_socCom[tmp]->Init(this->m_hWnd);
 
-        // CString을 UTF-8로 변환 후 전송
-        //CString connectMessage = SOC_CLIENT_CONNECT + number;
-        //CStringA connectMessageA(CW2A(connectMessage, CP_UTF8));
-        //m_socCom[tmp]->Send(connectMessageA, 256);
-
         UpdateData(FALSE);
         return TRUE;
     }
@@ -76,46 +71,45 @@ LPARAM CChatRoom::OnAccept(WPARAM wParam, LPARAM lParam) {
 
 
 LPARAM CChatRoom::OnReceive(WPARAM wParam, LPARAM lParam) {
-
+    // MainFrame에서 값 받아오기
     CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
     CString chatnameDlg = pMainFrame->chatname;
-
+    // 소켓에서 값을 읽어오기 위한 버퍼
     char pTmp[256];
-    CString strTmp;
+    // 버퍼 초기화
     memset(pTmp, '\0', sizeof(pTmp));
-
+    CString strTmp;
     // 데이터를 소켓으로부터 수신
     m_socCom[wParam]->Receive(pTmp, sizeof(pTmp));
 
-    // 수신된 데이터를 UTF-8에서 유니코드로 변환
+    // 데이터를 소켓으로부터 수신 후 UTF-8 형식으로 전환 후 CSrring 형식으로 전환(한글 깨짐 방지)
     strTmp = CString(CA2T(pTmp, CP_UTF8));
 
-    //case 구분
+    //파이프 구분
     int firstPipe = strTmp.Find(_T("|")); // 첫 번째 '|' 위치
     int secondPipe = strTmp.Find(_T("|"), firstPipe + 1); // 두 번째 '|' 위치
     int thirdPipe = strTmp.Find(_T("|"), secondPipe + 1); // 세 번째 '|' 위치
     int fourthPipe = strTmp.Find(_T("|"), thirdPipe + 1); // 네 번째 '|' 위치
-    int fifthPipe = strTmp.Find(_T("|"), fourthPipe + 1); // 네 번째 '|' 위치
+    int fifthPipe = strTmp.Find(_T("|"), fourthPipe + 1); // 다섯 번째 '|' 위치
 
-    // 첫 번째 값
+    // 파이프를 기준으로 값 구분
     CString firstValue = strTmp.Left(firstPipe).Trim();
-    // 두 번째 값
     CString secondValue = strTmp.Mid(firstPipe + 1, secondPipe - firstPipe - 1).Trim();
-    // 세 번째 값
     CString thirdValue = strTmp.Mid(secondPipe + 1, thirdPipe - secondPipe - 1).Trim();
-
     CString fourthValue = strTmp.Mid(thirdPipe + 1, fourthPipe - thirdPipe - 1).Trim();
-
+    CString fifthValue = strTmp.Mid(fourthPipe + 1).Trim();
     CString fifthValue = strTmp.Mid(fourthPipe + 1).Trim();
 
+    // switch문에 사용하기 위해 int형으로 형 변환
     int switchValue = _ttoi(firstValue); // CString -> 정수 변환
-
+    
+    //switchValue값에 따른 case 구분
     switch (switchValue)
     {
-    case 0:
+    case 0: //채팅 한 줄 수신
         case0(secondValue, thirdValue, fourthValue);
         break;
-    case 1:
+    case 1: //전체 채팅 내용 수신
         case1(secondValue, wParam);
         break;
     }
@@ -142,20 +136,22 @@ BOOL CChatRoom::OnInitDialog()
     m_socServer.Bind(port, ipAddress);
     m_socServer.Listen();
     m_socServer.Init(this->m_hWnd);
-
+    
+    // MianFarme으로 부터 값을 가져오기
     CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
     CString chatnameDlg = pMainFrame->chatname;
+    
+    //DB에서 채팅방table에 대해 전체 내용 SELECT하는 쿼리 작성
     CString query;
     query.Format(_T("SELECT * FROM `%s`"), chatnameDlg);
 
-    //CT2A asciiQuery(Query); // CString to ASCII
     CW2A utfQuery(query, CP_UTF8);
     char* queryChar = utfQuery;
 
+    // MySQL 서버 연결
     MYSQL Conn;
     mysql_init(&Conn);
 
-    // MySQL 서버 연결
     MYSQL* ConnPtr = mysql_real_connect(&Conn, MY_IP, DB_USER, DB_PASS, DB_NAME, 3306, (char*)NULL, 0);
 
     if (ConnPtr == NULL) {
@@ -163,7 +159,7 @@ BOOL CChatRoom::OnInitDialog()
         return FALSE;  // 연결 실패 시 FALSE 반환
     }
 
-    // SQL 쿼리 실행
+    // SLEECT 쿼리 실행
     int Stat = mysql_query(ConnPtr, queryChar);
 
     if (Stat != 0) {
@@ -225,24 +221,27 @@ BOOL CChatRoom::OnInitDialog()
 void CChatRoom::OnBnClickedButtonSend()
 {
     // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+    // MianFarme으로 부터 값을 가져오기
     CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
     CString username = pMainFrame->m_strUserName;
     CString chatnameDlg = pMainFrame->chatname;
     CString text;
     GetDlgItemText(IDC_EDIT_SEND, text);
-    char pTmp[256];
+    char pTmp[256]; //소켓에서 값을 읽어오기 위한 버퍼
     UpdateData(TRUE);
     //수신한 내용을 DB에 INSERT
     CString Query;
     Query.Format(
-        _T("INSERT INTO `%s` (name, message) VALUES ('%s', '%s')"),
+        _T("INSERT INTO `%s` (name, message) VALUES ('%s', '%s')"), //INSERT 쿼리 작성
         chatnameDlg, username, text);
     CW2A utfQuery(Query, CP_UTF8);
     char* queryChar = utfQuery;
+
+    
+    // MySQL 서버 연결
     MYSQL Conn;
     mysql_init(&Conn);
 
-    // MySQL 서버 연결
     MYSQL* ConnPtr = mysql_real_connect(&Conn, MY_IP, DB_USER, DB_PASS, DB_NAME, 3306, (char*)NULL, 0);
 
     if (ConnPtr == NULL) {
@@ -310,7 +309,8 @@ void CChatRoom::OnBnClickedButtonSend()
             int i = m_List_chating.GetCount();
             m_List_chating.InsertString(i, rowData);
             strncpy_s(pTmp, sizeof(pTmp), utfrowData, _TRUNCATE);
-            //
+
+            // 리스트에 추가한 데이터를 클라이언트에 전송하기 위한 포맷 작성
             CString text;
             text.Format(_T("0|%s|%s"), rowData, chatnameDlg);
             CW2A utftext(text, CP_UTF8);
@@ -322,7 +322,7 @@ void CChatRoom::OnBnClickedButtonSend()
                 m_socCom[j]->Send(pTmp, sizeof(pTmp));
             }
         }
-        m_strSend.Empty();
+        m_strSend.Empty(); //edit에 남아있는 문자열 제거
         Invalidate();
         // 결과 해제
         mysql_free_result(Result);
@@ -349,7 +349,10 @@ void CChatRoom::case0(CString secondValue, CString thirdValue, CString fourthVal
     CString chatname = secondValue;  // 첫 번째 값
     CString name = thirdValue;   // 두 번째 값
     CString strTmp = fourthValue; // 세 번째 값
+
+    //소켓에서 값을 읽어오기 위한 버퍼
     char pTmp[256];
+    // 버퍼 초기화
     memset(pTmp, '\0', sizeof(pTmp));
 
     // MySQL 서버 연결
@@ -421,6 +424,7 @@ void CChatRoom::case0(CString secondValue, CString thirdValue, CString fourthVal
             int i = m_List_chating.GetCount();
             m_List_chating.InsertString(i, rowData);
 
+            // 리스트에 추가한 데이터를 클라이언트에 전송하기 위한 포맷 작성
             CString text;
             text.Format(_T("0|%s|%s"), rowData, chatname);
             CW2A utftext(text, CP_UTF8);
@@ -449,8 +453,11 @@ void CChatRoom::case0(CString secondValue, CString thirdValue, CString fourthVal
 void CChatRoom::case1(CString secondValue, WPARAM wParam)
 {
     // TODO: 여기에 구현 코드 추가.
-    char pTmp[256];
+    char pTmp[256];//소켓에서 값을 읽어오기 위한 버퍼
+    
+    // 버퍼 초기화
     memset(pTmp, '\0', sizeof(pTmp));
+    
     // MySQL 서버 연결
     MYSQL Conn;
     mysql_init(&Conn);
@@ -462,7 +469,7 @@ void CChatRoom::case1(CString secondValue, WPARAM wParam)
     }
 
 
-    // SQL 쿼리 실행
+    // SELECT 쿼리 작성 및 실행
 
     CString Query;
     Query.Format(_T("SELECT * FROM `%s`"), secondValue);
@@ -504,10 +511,11 @@ void CChatRoom::case1(CString secondValue, WPARAM wParam)
                     }
                 }
             }
-
+            //전송 요청받은 클라이언트 id값 받아오기
             CString Id;
             Id.Format(_T("%d"), wParam);
-
+            
+            //전송할 내용 포맷
             CString edit;
             edit.Format(_T("%s|nulldata"), rowData);
             CW2A utfrowData(edit, CP_UTF8);

@@ -33,7 +33,6 @@ public:
 	afx_msg void OnBnClickedButtonSend();
 	afx_msg LPARAM OnReceive(WPARAM wParam, LPARAM lParam);
 	CString m_strUserID;
-	//afx_msg void OnBnClickedCancel();
 	int myUserId;
 	CString m_strSend;
 	CString m_strIP;

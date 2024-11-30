@@ -27,10 +27,10 @@
 //----------------------------------------------------------------------------
 
 //DB연결 초기화 관련헤더 ----------------------------------------------------
-#define MY_IP "192.168.213.117"
-#define DB_USER "newuser2"
-#define DB_PASS "1q2w3e4r!"
-#define DB_NAME "Mydatabase"
+#define MY_IP ""//Server IP 입력
+#define DB_USER "" //SQLYog username
+#define DB_PASS ""//SQLYog password
+#define DB_NAME ""//SQLYog DB name
 //-----------------------------------------------------------------------------
 
 
