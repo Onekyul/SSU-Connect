@@ -139,7 +139,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
         // 가져온 데이터를 Row에 데이터를 저장
         while ((Row = mysql_fetch_row(Result)) != NULL) {
             if (Row[0] != NULL) { // Row[0]이 NULL인지 확인
-                CString dbName(Row[0]); // 데이터베이스에서 이름 가져오기
+                CString dbName(CA2T(Row[0], CP_UTF8)); // 데이터베이스에서 이름 가져오기
                 m_friendsList.AddString(dbName); // 리스트박스에 이름 추가
             }
         }
@@ -147,7 +147,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
         mysql_free_result(Result); // 결과 해제
         mysql_close(ConnPtr); // 연결 해제
     }
-    
+
     SetWindowPos(NULL, 100, 100, 400, 600, SWP_NOZORDER | SWP_NOACTIVATE);
 
     return 0;
@@ -223,10 +223,8 @@ void CMainFrame::OnFriendsClicked()
         // 가져온 데이터를 행별로 ListBox에 저장
         while ((Row = mysql_fetch_row(Result)) != NULL) {
             if (Row[0] != NULL) { // Row[0]이 NULL인지 확인
-                CString dbName(Row[0]); // 데이터베이스에서 이름 가져오기
-                    m_friendsList.AddString(dbName);
-               
-                // 리스트박스에 이름 추가
+                CString dbName(CA2T(Row[0], CP_UTF8)); // 데이터베이스에서 이름 가져오기
+                m_friendsList.AddString(dbName); // 리스트박스에 이름 추가
             }
         }
 
@@ -386,7 +384,7 @@ void CMainFrame::OnPaint()
         {
             m_editProfileButton.Create(_T("회원정보 변경"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(100, 200, 260, 250), this, IDC_BUTTON_EDIT);
         }
-        
+
         if (m_logoutButton.GetSafeHwnd())
         {
             m_logoutButton.MoveWindow(100, 360, 160, 50);
@@ -497,7 +495,7 @@ void CMainFrame::OnCreateChatRoomClicked()
         if (!dlg.m_chatRoomName.IsEmpty())
         {
             // 'user' 이름 제한 추가
-            if (dlg.m_chatRoomName.CompareNoCase(_T("user")) == 0 || dlg.m_chatRoomName.CompareNoCase(_T("admin")))
+            if (dlg.m_chatRoomName.CompareNoCase(_T("user")) == 0 || dlg.m_chatRoomName.CompareNoCase(_T("admin")) == 0)
             {
                 AfxMessageBox(_T("해당 이름으로는 채팅방을 생성할 수 없습니다."));
                 return;
@@ -559,11 +557,12 @@ void CMainFrame::OnCreateChatRoomClicked()
                 dlg.m_chatRoomName);
 
             CW2A utfQuery2(query, CP_UTF8);
-            char* queryChar2 = utfQuery;
+            char* queryChar2 = utfQuery2;
             // 쿼리 실패 시
             if (mysql_query(ConnPtr, queryChar2))
             {
                 MessageBox(_T("쿼리 실행 중 오류가 발생했습니다."), _T("Error"), MB_ICONERROR);
+
             }
             else
             {
@@ -662,6 +661,5 @@ void CMainFrame::OnJoinChatRoomClicked()
         }
     }
 }
-
 
 

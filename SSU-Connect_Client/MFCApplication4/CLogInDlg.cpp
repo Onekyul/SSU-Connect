@@ -16,7 +16,7 @@ IMPLEMENT_DYNAMIC(CLogInDlg, CDialogEx)
 
 
 CLogInDlg::CLogInDlg(CWnd* pParent /*=nullptr*/)
-	: CDialogEx(IDD_DIALOG_LOGIN, pParent)
+    : CDialogEx(IDD_DIALOG_LOGIN, pParent)
 {
 
 }
@@ -27,16 +27,16 @@ CLogInDlg::~CLogInDlg()
 
 void CLogInDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+    CDialogEx::DoDataExchange(pDX);
 }
 
 
 BEGIN_MESSAGE_MAP(CLogInDlg, CDialogEx)
-	ON_BN_CLICKED(IDC_BUTTON_LOGIN, &CLogInDlg::OnClickedButtonLogin)
-	ON_BN_CLICKED(IDC_BUTTON_REGISTER, &CLogInDlg::OnClickedButtonRegister)
-	ON_EN_CHANGE(IDC_EDIT_PW, &CLogInDlg::OnChangeEditPw)
+    ON_BN_CLICKED(IDC_BUTTON_LOGIN, &CLogInDlg::OnClickedButtonLogin)
+    ON_BN_CLICKED(IDC_BUTTON_REGISTER, &CLogInDlg::OnClickedButtonRegister)
+    ON_EN_CHANGE(IDC_EDIT_PW, &CLogInDlg::OnChangeEditPw)
     ON_COMMAND(IDOK, &CLogInDlg::OnIdok)
-     ON_WM_CLOSE() // WM_CLOSE 메시지 처리기 추가
+    ON_WM_CLOSE() // WM_CLOSE 메시지 처리기 추가
     ON_WM_CLOSE()
 END_MESSAGE_MAP()
 
@@ -86,16 +86,16 @@ void CLogInDlg::OnClickedButtonLogin()
             continue; // ID 또는 비밀번호가 NULL인 경우 건너뜀
         }
 
-        CString dbId(Row[0]); // 데이터베이스에서 가져온 ID
-        CString dbPw(Row[1]); // 데이터베이스에서 가져온 비밀번호
-        CString dbName(Row[2]);// 데이터베이스에서 이름가져오기
-       
+        CString dbId(CA2T(Row[0], CP_UTF8)); // 데이터베이스에서 가져온 ID
+        CString dbPw(CA2T(Row[1], CP_UTF8)); // 데이터베이스에서 가져온 비밀번호
+        CString dbName(CA2T(Row[2], CP_UTF8));// 데이터베이스에서 이름가져오기
+
 
         if (dbId == m_strId) { // ID 비교
             if (dbPw == m_strPw) { // 비밀번호 비교
                 m_strName = dbName;
                 CString Text;
-             
+
                 MessageBox(_T("로그인 성공"));
                 loginSuccess = true; // 로그인 성공 플래그 설정
                 break; // 반복 종료
@@ -122,22 +122,22 @@ void CLogInDlg::OnClickedButtonLogin()
 
 void CLogInDlg::OnClickedButtonRegister()
 {
-	CRegisterDlg Register;
-	if (Register.DoModal() == IDOK) {
-		//DB에 테이블 추가 및 ---- , 중복처리?
-	}
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+    CRegisterDlg Register;
+    if (Register.DoModal() == IDOK) {
+        //DB에 테이블 추가 및 ---- , 중복처리?
+    }
+    // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }
 
 
 void CLogInDlg::OnChangeEditPw()
 {
-	// TODO:  RICHEDIT 컨트롤인 경우, 이 컨트롤은
-	// CDialogEx::OnInitDialog() 함수를 재지정 
-	//하고 마스크에 OR 연산하여 설정된 ENM_CHANGE 플래그를 지정하여 CRichEditCtrl().SetEventMask()를 호출하지 않으면
-	// 이 알림 메시지를 보내지 않습니다.
+    // TODO:  RICHEDIT 컨트롤인 경우, 이 컨트롤은
+    // CDialogEx::OnInitDialog() 함수를 재지정 
+    //하고 마스크에 OR 연산하여 설정된 ENM_CHANGE 플래그를 지정하여 CRichEditCtrl().SetEventMask()를 호출하지 않으면
+    // 이 알림 메시지를 보내지 않습니다.
 
-	// TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
+    // TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }
 
 

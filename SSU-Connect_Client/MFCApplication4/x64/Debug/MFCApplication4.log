@@ -1,24 +1,2 @@
-﻿  pch.cpp
-  CChangeDlg.cpp
-  CChatRoom.cpp
-C:\Users\송성환\Documents\GitHub\SSU-Connect\SSU-Connect_Client\MFCApplication4\CChangeDlg.cpp(59,19): warning C4101: 'Row' :참조되지 않은 지역 변수입니다.
-  (소스 파일 '/CChangeDlg.cpp'을(를) 컴파일하는 중)
-  
-  CChatRoomNameDlg.cpp
-  CCheckDlg.cpp
-  CLogInDlg.cpp
-  CRegisterDlg.cpp
-  CSocCom.cpp
-  MainFrm.cpp
-C:\Users\송성환\Documents\GitHub\SSU-Connect\SSU-Connect_Client\MFCApplication4\MainFrm.cpp(447,11): warning C4101: 'Conn' :참조되지 않은 지역 변수입니다.
-  (소스 파일 '/MainFrm.cpp'을(를) 컴파일하는 중)
-  
-C:\Users\송성환\Documents\GitHub\SSU-Connect\SSU-Connect_Client\MFCApplication4\MainFrm.cpp(450,9): warning C4101: 'Stat' :참조되지 않은 지역 변수입니다.
-  (소스 파일 '/MainFrm.cpp'을(를) 컴파일하는 중)
-  
-  MFCApplication4.cpp
-  MFCApplication4Doc.cpp
-  MFCApplication4View.cpp
-  코드를 생성하고 있습니다...
-  LINK : C:\Users\송성환\Documents\GitHub\SSU-Connect\SSU-Connect_Client\x64\Debug\MFCApplication4.exe을(를) 찾을 수 없거나 마지막 증분 링크에 의해 빌드되지 않았습니다. 전체 링크를 수행하고 있습니다.
-  MFCApplication4.vcxproj -> C:\Users\송성환\Documents\GitHub\SSU-Connect\SSU-Connect_Client\x64\Debug\MFCApplication4.exe
+﻿  CChatRoom.cpp
+  MFCApplication4.vcxproj -> C:\Users\resu2\OneDrive\바탕 화면\SSU-Connect\SSU-Connect_Client\x64\Debug\MFCApplication4.exe

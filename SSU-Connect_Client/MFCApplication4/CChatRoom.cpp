@@ -54,7 +54,7 @@ LPARAM CChatRoom::OnReceive(WPARAM wParam, LPARAM lParam) {
     char pTmp[256];
     CString strTmp;
     memset(pTmp, '\0', sizeof(pTmp));
-     
+
     // 데이터를 소켓으로부터 수신 후 UTF-8 형식으로 전환 후 CSrring 형식으로 전환(한글 깨짐 방지)
     m_socCom.Receive(pTmp, sizeof(pTmp));
     strTmp = CString(CA2T(pTmp, CP_UTF8));
@@ -110,7 +110,7 @@ BOOL CChatRoom::OnInitDialog()
     CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
     CString username = pMainFrame->m_strUserName;
     CString chatnameDlg = pMainFrame->chatname;
-    
+
     UpdateData(TRUE);
     char pTmp[256]; //소켓으로 값을 전송하기 위한 버퍼
     // 버퍼 초기화
@@ -124,7 +124,7 @@ BOOL CChatRoom::OnInitDialog()
     strncpy_s(pTmp, sizeof(pTmp), strSendA, _TRUNCATE);
     // 데이터를 소켓을 통해 전송
     m_socCom.Send(pTmp, sizeof(pTmp));
-    
+
     UpdateData(FALSE);
     return TRUE;  // 성공 시 TRUE 반환
 
@@ -139,7 +139,7 @@ void CChatRoom::OnBnClickedButtonSend()
     CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
     CString username = pMainFrame->m_strUserName;
     CString chatnameDlg = pMainFrame->chatname;
-    
+
     UpdateData(TRUE);
     // 소켓으로 값을 전송하기 위한 버퍼
     char pTmp[256];
@@ -151,7 +151,7 @@ void CChatRoom::OnBnClickedButtonSend()
 
     //닉네임과 채팅방 정보 추가
     strTmp.Format(_T("0|%s|%s|%s|%s"), chatnameDlg, username, text, NULL);
-    
+
     // CString을 UTF-8로 변환
     CW2A strSendA(strTmp, CP_UTF8);
 
@@ -163,7 +163,7 @@ void CChatRoom::OnBnClickedButtonSend()
 
     // 데이터를 소켓을 통해 전송
     m_socCom.Send(pTmp, sizeof(pTmp));
-    
+
     UpdateData(FALSE);
 }
 
