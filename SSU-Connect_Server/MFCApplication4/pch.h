@@ -30,8 +30,8 @@
 //DB연결 초기화 관련헤더 ----------------------------------------------------
 #define MY_IP "localhost"
 #define DB_USER "root"
-#define DB_PASS ""//DB password
-#define DB_NAME ""//DB name
+#define DB_PASS "ssc0929*"//DB password
+#define DB_NAME "mydatabase"//DB name
 //-----------------------------------------------------------------------------
 #pragma once
 #include <afxsock.h>

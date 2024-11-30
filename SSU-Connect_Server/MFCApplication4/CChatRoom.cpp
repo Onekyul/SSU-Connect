@@ -130,7 +130,7 @@ BOOL CChatRoom::OnInitDialog()
     for (int i = 0; i < MAX_CLIENT_COUNT; i++) {
         m_socServer.m_index.push_back(i);
     }
-    CString ipAddress = _T("10.21.30.220"); // 원하는 IP 주소로 변경
+    CString ipAddress = _T("10.14.15.197"); // 원하는 IP 주소로 변경
     UINT port = 5000; // 원하는 포트 번호로 설정
 
     m_socServer.Create(port);
