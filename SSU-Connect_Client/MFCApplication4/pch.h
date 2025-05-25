@@ -29,7 +29,7 @@
 //DB연결 초기화 관련헤더 ----------------------------------------------------
 #define MY_IP "localhost"//Server IP 입력
 #define DB_USER "root" //SQLYog username
-#define DB_PASS "ssc0929*"//SQLYog password
+#define DB_PASS //SQLYog password
 #define DB_NAME "mydatabase"//SQLYog DB name
 //-----------------------------------------------------------------------------
 
